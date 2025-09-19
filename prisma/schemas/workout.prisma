@@ -1,0 +1,31 @@
+// model Workout {
+//   id        String            @id @default(uuid())
+//   userId    String
+//   user      User              @relation(fields: [userId], references: [id])
+//   date      DateTime          @default(now())
+//   bodyPart  String // e.g. 'Chest', 'Back', 'Legs'
+//   exercises WorkoutExercise[]
+
+//   createdAt DateTime @default(now())
+// }
+
+// model WorkoutExercise {
+//   id        String       @id @default(uuid())
+//   workoutId String
+//   workout   Workout      @relation(fields: [workoutId], references: [id])
+//   name      String // e.g. 'Dumbbell Chest Press'
+//   sets      WorkoutSet[]
+
+//   createdAt DateTime @default(now())
+// }
+
+// model WorkoutSet {
+//   id         String          @id @default(uuid())
+//   exerciseId String
+//   exercise   WorkoutExercise @relation(fields: [exerciseId], references: [id])
+//   setNumber  Int // 1, 2, 3 etc.
+//   weightInKg Float
+//   reps       Int
+
+//   createdAt DateTime @default(now())
+// }

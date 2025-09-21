@@ -1,0 +1,12 @@
+model PaymentConfiguration {
+  id                Int      @id @default(autoincrement())
+  rate              Float    // price per slot
+  duration          Int      // duration in minutes
+  currency          String   @default("INR")
+  paymentGateway    String   @default("RAZORPAY")
+  razorpayKeyId     String   // Razorpay key ID
+  razorpayKeySecret String   // Razorpay secret
+  status            Boolean  @default(true) // active or inactive
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

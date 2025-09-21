@@ -1,0 +1,24 @@
+enum LibraryStatus {
+  OPEN
+  CLOSED
+  MAINTENANCE
+}
+
+enum LibraryType {
+  PUBLIC
+  PRIVATE
+  UNIVERSITY
+}
+
+model Library {
+  id          Int            @id @default(autoincrement())
+  name        String
+  dimensionW  Float?
+  dimensionH  Float?
+  floor       Int?
+  capacity    Int
+  status      LibraryStatus
+  type        LibraryType
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}

@@ -14,184 +14,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//import './schemas/user.prisma'
-//import './schemas/role.prisma'
+
 
 // Enums
-enum UserType {
-  USER
-  GYM_OWNER
-  ADMIN
-}
+// enum UserType {
+//   USER
+//   GYM_OWNER
+//   ADMIN
+// }
 
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
-}
+// enum Gender {
+//   MALE
+//   FEMALE
+//   OTHER
+// }
 
 
-model Token {
-  id         String     @id @default(uuid())
-  userId     String     @unique
-  token      String
-  user       User       @relation(fields: [userId], references: [id])
-  createdAt  DateTime   @default(now())
-}
+// model Token {
+//   id         String     @id @default(uuid())
+//   userId     String     @unique
+//   token      String
+//   user       User       @relation(fields: [userId], references: [id])
+//   createdAt  DateTime   @default(now())
+// }
 
-// Core Models
-model User {
-  id            String    @id @default(uuid())
-  email         String?   @unique
-  phone         String?   @unique
-  password      String
-  userType      UserType  @default(USER)
-  isActive      Boolean   @default(true)
-  refreshToken  String?
-  rememberToken String?
-  emailVerified Boolean   @default(false)
-  phoneVerified Boolean   @default(false)
-  lastLoginAt   DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+// // Core Models
+// model User {
+//   id            String    @id @default(uuid())
+//   email         String?   @unique
+//   phone         String?   @unique
+//   password      String
+//   userType      UserType  @default(USER)
+//   isActive      Boolean   @default(true)
+//   refreshToken  String?
+//   rememberToken String?
+//   emailVerified Boolean   @default(false)
+//   phoneVerified Boolean   @default(false)
+//   lastLoginAt   DateTime?
+//   createdAt     DateTime  @default(now())
+//   updatedAt     DateTime  @updatedAt
+// }
 
-  userDetails     UserDetails?
-  settings        UserSettings?
-  memberships     Membership[]
-  workouts        WorkoutSession[]
-  token           Token?
-  invitesSent     Invite[]         @relation("SentInvites")
-  invitesReceived Invite[]         @relation("ReceivedInvites")
-  gymsOwned       Gym[]            @relation("UserOwnedGyms") // 🔹 added reverse relation
-}
+// model UserDetails {
+//   id     String @id @default(uuid())
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id])
 
-model UserDetails {
-  id     String @id @default(uuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+//   firstName     String
+//   middleName    String
+//   lastName     String
+//   fullName     String
+//   gender       Gender?
+//   dob          DateTime?
+//   heightInCm   Float?
+//   weightInKg   Float?
+//   profileImage String?
+//   createdAt    DateTime  @default(now())
+//   updatedAt    DateTime  @updatedAt
+// }
 
-  firstName     String
-  middleName    String
-  lastName     String
-  fullName     String
-  gender       Gender?
-  dob          DateTime?
-  heightInCm   Float?
-  weightInKg   Float?
-  profileImage String?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-}
+// model UserSettings {
+//   id     String @id @default(uuid())
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id])
 
-model UserSettings {
-  id     String @id @default(uuid())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
+//   notificationEnabled Boolean  @default(true)
+//   darkMode            Boolean  @default(false)
+//   createdAt           DateTime @default(now())
+//   updatedAt           DateTime @updatedAt
+// }
 
-  notificationEnabled Boolean  @default(true)
-  darkMode            Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-}
 
-model Gym {
-  id        String   @id @default(uuid())
-  name      String
-  location  String?
-  ownerId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  memberships     Membership[]
-  exercises       Exercise[]
-  workoutSessions WorkoutSession[]
-  invites         Invite[]
-  owner           User             @relation("UserOwnedGyms", fields: [ownerId], references: [id])
-}
-
-model Membership {
-  id       String   @id @default(uuid())
-  userId   String
-  gymId    String
-  joinedAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-  gym  Gym  @relation(fields: [gymId], references: [id])
-}
-
-model WorkoutSession {
-  id        String   @id @default(uuid())
-  userId    String
-  gymId     String?
-  date      DateTime @default(now())
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user      User              @relation(fields: [userId], references: [id])
-  gym       Gym?              @relation(fields: [gymId], references: [id])
-  exercises WorkoutExercise[]
-}
-
-model ExerciseCategory {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  exercises Exercise[]
-}
-
-model Exercise {
-  id             String   @id @default(uuid())
-  name           String
-  description    String?
-  categoryId     String
-  createdByGymId String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  category     ExerciseCategory  @relation(fields: [categoryId], references: [id])
-  createdByGym Gym?              @relation(fields: [createdByGymId], references: [id])
-  usedIn       WorkoutExercise[]
-}
-
-model WorkoutExercise {
-  id               String   @id @default(uuid())
-  workoutSessionId String
-  exerciseId       String
-  notes            String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-
-  workoutSession WorkoutSession @relation(fields: [workoutSessionId], references: [id])
-  exercise       Exercise       @relation(fields: [exerciseId], references: [id])
-  sets           WorkoutSet[]
-}
-
-model WorkoutSet {
-  id                String   @id @default(uuid())
-  workoutExerciseId String
-  setNumber         Int
-  weightInKg        Float
-  reps              Int
-  durationSec       Int? // Optional: duration/time under tension
-  rpe               Float? // Optional: perceived effort
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
-}
-
-model Invite {
-  id         String   @id @default(uuid())
-  senderId   String
-  receiverId String
-  gymId      String
-  status     String // e.g., 'PENDING', 'ACCEPTED', 'REJECTED'
-  createdAt  DateTime @default(now())
-
-  sender   User @relation("SentInvites", fields: [senderId], references: [id])
-  receiver User @relation("ReceivedInvites", fields: [receiverId], references: [id])
-  gym      Gym  @relation(fields: [gymId], references: [id])
-}

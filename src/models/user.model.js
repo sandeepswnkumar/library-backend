@@ -28,9 +28,8 @@ const userSchema = new mongoose.Schema({
 });
 
 // Hash password before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
-    
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
@@ -41,12 +40,12 @@ userSchema.pre('save', async function(next) {
 });
 
 // Method to check password
-userSchema.methods.isPasswordCorrect = async function(password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
 // Method to generate access token
-userSchema.methods.generateAccessToken = function() {
+userSchema.methods.generateAccessToken = function () {
     return jwt.sign(
         {
             _id: this._id,
@@ -61,7 +60,7 @@ userSchema.methods.generateAccessToken = function() {
 };
 
 // Method to generate refresh token
-userSchema.methods.generateRefreshToken = function() {
+userSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id

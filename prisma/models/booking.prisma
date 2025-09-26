@@ -1,0 +1,43 @@
+
+enum BookingType {
+  STUDY
+  WORK
+  EVENT
+  MEETING
+}
+
+enum DurationUnit {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Booking {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  libraryId         Int
+  libraryLocationId Int
+  bookingDate       DateTime   // when the booking was created
+  bookingType       BookingType
+  durationValue     Int        // e.g. 2 (for 2 hours, 2 days, etc.)
+  durationUnit      DurationUnit
+  status            BookingStatus
+  startDate         DateTime   // when booking starts
+  endDate           DateTime?  // derived from startDate + durationValue
+
+  // Relations
+  user              User             @relation(fields: [userId], references: [id])
+  library           Library          @relation(fields: [libraryId], references: [id])
+  libraryLocation   LibraryLocation  @relation(fields: [libraryLocationId], references: [id])
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

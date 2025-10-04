@@ -24,7 +24,7 @@ model Booking {
   id                Int      @id @default(autoincrement())
   userId            Int
   libraryId         Int
-  libraryLocationId Int
+  libraryLocationId Int?
   bookingDate       DateTime   // when the booking was created
   bookingType       BookingType
   durationValue     Int        // e.g. 2 (for 2 hours, 2 days, etc.)
@@ -36,7 +36,7 @@ model Booking {
   // Relations
   user              User             @relation(fields: [userId], references: [id])
   library           Library          @relation(fields: [libraryId], references: [id])
-  libraryLocation   LibraryLocation  @relation(fields: [libraryLocationId], references: [id])
+  libraryLocation   LibraryLocation?  @relation(fields: [libraryLocationId], references: [id])
 
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt

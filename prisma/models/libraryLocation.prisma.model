@@ -7,6 +7,9 @@ model LibraryLocation {
   countryId Int
   address1  String
   address2  String?
+  bookings  Booking[]
+  facilities LibraryFacility[]
+  userLibraries UserLibrary[] 
 
   // Relations
   library   Library  @relation(fields: [libraryId], references: [id])

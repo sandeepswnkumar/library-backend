@@ -16,3 +16,204 @@ datasource db {
 
 
 
+
+
+
+enum BookingType {
+  STUDY
+  WORK
+  EVENT
+  MEETING
+}
+
+enum DurationUnit {
+  HOUR
+  DAY
+  WEEK
+  MONTH
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model Booking {
+  id                Int      @id @default(autoincrement())
+  userId            Int
+  libraryId         Int
+  libraryLocationId Int?
+  bookingDate       DateTime   // when the booking was created
+  bookingType       BookingType
+  durationValue     Int        // e.g. 2 (for 2 hours, 2 days, etc.)
+  durationUnit      DurationUnit
+  status            BookingStatus
+  startDate         DateTime   // when booking starts
+  endDate           DateTime?  // derived from startDate + durationValue
+
+  // Relations
+  user              User             @relation(fields: [userId], references: [id])
+  library           Library          @relation(fields: [libraryId], references: [id])
+  libraryLocation   LibraryLocation?  @relation(fields: [libraryLocationId], references: [id])
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum LibraryStatus {
+  OPEN
+  CLOSED
+  MAINTENANCE
+}
+
+enum LibraryType {
+  PUBLIC
+  PRIVATE
+  UNIVERSITY
+}
+
+model Library {
+  id          Int            @id @default(autoincrement())
+  name        String
+  dimensionW  Float?
+  dimensionH  Float?
+  floor       Int?
+  capacity    Int
+  status      LibraryStatus
+  type        LibraryType
+  bookings    Booking[]
+  facilities  LibraryFacility[]
+  locations   LibraryLocation[]
+  userLibraries UserLibrary[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+
+model LibraryFacility {
+  id               Int       @id @default(autoincrement())
+  libraryId        Int
+  libraryLocationId Int?
+  name             String
+  description      String?
+  images           String[]  // store image URLs
+  isAvailable      Boolean   @default(true)
+  extraCharge      Float?    // if some facility has extra charge
+  status           Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relations (assuming Library and LibraryLocation tables exist)
+  library          Library   @relation(fields: [libraryId], references: [id])
+  libraryLocation  LibraryLocation? @relation(fields: [libraryLocationId], references: [id])
+}
+
+
+model LibraryLocation {
+  id        Int     @id @default(autoincrement())
+  libraryId Int
+  cityId    Int
+  stateId   Int
+  countryId Int
+  address1  String
+  address2  String?
+  bookings  Booking[]
+  facilities LibraryFacility[]
+  userLibraries UserLibrary[] 
+
+  // Relations
+  library   Library  @relation(fields: [libraryId], references: [id])
+  city      City     @relation(fields: [cityId], references: [id])
+  state     State    @relation(fields: [stateId], references: [id])
+  country   Country  @relation(fields: [countryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model City {
+  id                Int                @id @default(autoincrement())
+  name              String             @unique
+  libraryLocations  LibraryLocation[]
+}
+
+model State {
+  id                Int                @id @default(autoincrement())
+  name              String             @unique
+  libraryLocations  LibraryLocation[]
+}
+
+model Country {
+  id                Int                @id @default(autoincrement())
+  name              String             @unique
+  libraryLocations  LibraryLocation[]
+}
+
+model PaymentConfiguration {
+  id                Int      @id @default(autoincrement())
+  rate              Float    // price per slot
+  duration          Int      // duration in minutes
+  currency          String   @default("INR")
+  paymentGateway    String   @default("RAZORPAY")
+  razorpayKeyId     String   // Razorpay key ID
+  razorpayKeySecret String   // Razorpay secret
+  status            Boolean  @default(true) // active or inactive
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Permission {
+  id           Int          @id @default(autoincrement())
+  name         String       @unique
+  roles        Role[]
+}
+
+model Role {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  users       User[]   
+  permissions Permission[]
+}
+
+model User {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  email              String   @unique
+  password           String
+  userType           String
+  resetPasswordToken String
+  bookings           Booking[]
+  roles              Role[]
+  userDetails        UserDetails[]
+  userLibraries      UserLibrary[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model UserDetails {
+  id      Int     @id @default(autoincrement())
+  userId  Int     @unique
+  address String?
+  phone   String?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+
+model UserLibrary {
+  id                 Int      @id @default(autoincrement())
+  libraryId          Int
+  userId             Int
+  libraryLocationId  Int?
+
+
+  // Relations
+  library            Library         @relation(fields: [libraryId], references: [id])
+  user               User            @relation(fields: [userId], references: [id])
+  libraryLocation    LibraryLocation? @relation(fields: [libraryLocationId], references: [id])
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}

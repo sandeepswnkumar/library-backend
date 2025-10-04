@@ -5,6 +5,10 @@ model User {
   password           String
   userType           String
   resetPasswordToken String
+  bookings           Booking[]
+  roles              Role[]
+  userDetails        UserDetails[]
+  userLibraries      UserLibrary[]
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }

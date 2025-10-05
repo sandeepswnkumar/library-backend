@@ -41,6 +41,10 @@ npm install express @prisma/client dotenv
 npm install --save-dev prisma
 
 
+
+-Validate Primsa
+prisma validate
+
 - Initialize Prisma
 npx prisma init
 

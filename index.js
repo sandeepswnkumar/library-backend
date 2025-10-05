@@ -1,10 +1,7 @@
 import express from 'express';
 import appRouter from './src/app.route.js';
-import { PrismaClient } from './generated/prisma/index.js';
 const PORT = process.env.APP_PORT || 5000;
 
-
-const prisma = new PrismaClient();
 const app = express();
 
 app.use(express.json());

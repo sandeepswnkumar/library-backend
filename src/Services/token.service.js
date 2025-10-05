@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { prisma } from "../primaClient.js";
+import { prisma } from "../prismaClient.js";
 import tokenTypeEnum from "../Enums/tokenTypeEnum.js";
 
 
@@ -15,11 +15,11 @@ export const createToken = async (data) => {
 };
 
 
-export const getTokenCurrenToken = async (email) => {
+export const getTokenCurrenToken = async (userId) => {
     return await prisma.token.findFirst({
         where: {
             user: {
-                email: email
+                id: userId
             }
         },
         include: {
@@ -32,7 +32,7 @@ export const getTokenCurrenToken = async (email) => {
 
 export const deleteToken = async (condition) => {
     return await prisma.token.delete({
-        where: {...condition}
+        where: { ...condition }
     });
 }
 
@@ -86,6 +86,7 @@ export const generateRefreshToken = (user) => {
 
 export const verifyToken = (token, tokenType = '') => {
     try {
+
         let payload = null
         if (tokenType == tokenTypeEnum.ACCESS_TOKEN) {
             payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
@@ -96,6 +97,13 @@ export const verifyToken = (token, tokenType = '') => {
         }
         return true
     } catch (err) {
+        if(token){
+            try{
+                deleteToken({token})
+            }catch(cerr){
+                console.log("cerr == ", cerr)
+            }
+        }
         return false
     }
 }

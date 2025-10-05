@@ -5,7 +5,7 @@ model LibraryFacility {
   libraryLocationId Int?
   name             String
   description      String?
-  images           String[]  // store image URLs
+  images           String?
   isAvailable      Boolean   @default(true)
   extraCharge      Float?    // if some facility has extra charge
   status           Boolean   @default(true)

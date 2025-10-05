@@ -1,0 +1,6 @@
+enum BookingType {
+  STUDY
+  WORK
+  EVENT
+  MEETING
+}

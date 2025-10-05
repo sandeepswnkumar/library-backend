@@ -1,0 +1,26 @@
+model User {
+  id                 Int           @id @default(autoincrement())
+  name               String
+  email              String        @unique
+  phone              String?       @unique
+  password           String
+  userType           String
+  resetPasswordToken String?
+  bookings           Booking[]
+  roles              Role[]
+  userDetails        UserDetails[]
+  userLibraries      UserLibrary[]
+  token              Token[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model UserDetails {
+  id         Int     @id @default(autoincrement())
+  userId     Int     @unique
+  firstName  String
+  middleName String?
+  lastName   String
+  address    String?
+  user       User    @relation(fields: [userId], references: [id])
+}

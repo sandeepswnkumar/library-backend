@@ -1,27 +1,5 @@
-
-enum BookingType {
-  STUDY
-  WORK
-  EVENT
-  MEETING
-}
-
-enum DurationUnit {
-  HOUR
-  DAY
-  WEEK
-  MONTH
-}
-
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-  COMPLETED
-}
-
 model Booking {
-  id                Int      @id @default(autoincrement())
+  id                BigInt      @id @default(autoincrement())
   userId            Int
   libraryId         Int
   libraryLocationId Int?

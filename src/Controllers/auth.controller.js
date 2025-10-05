@@ -3,12 +3,12 @@ import api_response from "../Utils/apiResponse.js";
 import ApiResponseCode from "../Enums/apiResponseCode.js";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
-import { prisma } from "../primaClient.js"
-import { buildFullName, createUser, updateUser, UserExist } from "../Services/user.service.js";
+import { buildFullName, createUser, UserExist } from "../Services/user.service.js";
 import userTypeEnum from "../Enums/userTypeEnum.js";
 import bcrypt from "bcrypt";
 import { checkPassword } from "../Services/auth.service.js";
-import { createToken, deleteToken, generateAccessToken, generateRefreshToken, getTokenCurrenToken } from "../Services/token.service.js";
+import { createToken, deleteToken, generateAccessToken, generateRefreshToken, getTokenCurrenToken, verifyToken } from "../Services/token.service.js";
+import tokenTypeEnum from "../Enums/tokenTypeEnum.js";
 
 export async function login(req, res) {
     try {
@@ -22,11 +22,11 @@ export async function login(req, res) {
         if (!user) {
             throw new Error('Invalid user');
         }
-        const currentToken = await getTokenCurrenToken(email)
+        const currentToken = await getTokenCurrenToken(user.id)
         if (currentToken) {
-            if (verifyToken(currentToken.token)) {
+            if (verifyToken(currentToken.token, tokenTypeEnum.ACCESS_TOKEN)) {
                 return res.status(ApiResponseCode.OK)
-                    .json(new api_response(true, ApiResponseCode.CREATED, "User alrady loggedin", currentToken));
+                    .json(new api_response(true, ApiResponseCode.CREATED, "User alrady logged in", currentToken));
             }
         }
         let isPasswordCorrect = await checkPassword(user, password);
@@ -50,6 +50,7 @@ export async function login(req, res) {
 export async function logout(req, res) {
     try {
         let token = req.header('Authorization')?.replace('Bearer ', '');
+
         if (!token) {
             return res.status(ApiResponseCode.BAD_REQUEST)
                 .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "Access Denied. No, token provided"))
@@ -100,9 +101,9 @@ export async function generateAccessAndRefreshToken(user) {
         if (!refreshToken.success) {
             throw new Error("Refresh token generation failed : " + refreshToken.token)
         }
-        await updateUser(user.email, {
-            refreshToken: refreshToken.token
-        })
+        // await updateUser(user.email, {
+        //     refreshToken: refreshToken.token
+        // })
         let accessToken = generateAccessToken(user);
         if (!accessToken.success) {
             throw new Error("Access token generation failed : " + accessToken.token)
@@ -131,7 +132,8 @@ export async function register(req, res) {
                 .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
         }
 
-        const { email, phone, password, userType, firstName, middleName, lastName, gender, dob, heightInCm, weightInKg, profileImage } = req.body;
+        const { email, password, firstName, middleName, lastName } = req.body;
+        
         const isUserExist = await UserExist(email);
         if (isUserExist)
             return res.status(ApiResponseCode.BAD_REQUEST)
@@ -143,23 +145,24 @@ export async function register(req, res) {
         const userData = {
             email,
             password: hashedPassword,
-            phone: phone || null,
-            userType: userType || userTypeEnum.USER,
-            emailVerified: false,
-            phoneVerified: false,
+            name : buildFullName({ firstName, middleName, lastName }),
+            userType: userTypeEnum.USER,
+            // phoneVerified: false,
+            // emailVerified: false,
+            // phone: phone || null,
         };
         const userDetailData = {
             firstName,
-            middleName: middleName || null,
+            middleName: middleName || "",
             lastName,
-            fullName: buildFullName({ firstName, middleName, lastName }),
-            gender: gender || null,
-            dob: dob || null,
-            gender: gender || null,
-            dob: dob || null,
-            heightInCm: heightInCm || null,
-            weightInKg: weightInKg || null,
-            profileImage: profileImage || null,
+            // fullName: buildFullName({ firstName, middleName, lastName }),
+            // gender: gender || null,
+            // dob: dob || null,
+            // gender: gender || null,
+            // dob: dob || null,
+            // heightInCm: heightInCm || null,
+            // weightInKg: weightInKg || null,
+            // profileImage: profileImage || null,
         };
         const user = await createUser(userData, userDetailData);
         return res.status(ApiResponseCode.CREATED)

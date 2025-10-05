@@ -1,4 +1,4 @@
-import { prisma } from "../primaClient.js";
+import { prisma } from "../prismaClient.js";
 
 export const createUser = async (userData, userDetailData) => {
   return await prisma.$transaction(async (tx) => {
@@ -10,7 +10,7 @@ export const createUser = async (userData, userDetailData) => {
       data: {
         ...userDetailData,
         user: {
-          connect: { id: user.id } // ✅ now you have user.id
+          connect: { id: user.id }
         }
       }
     });
@@ -20,17 +20,22 @@ export const createUser = async (userData, userDetailData) => {
 };
 
 
-export const updateUserDetails = async (email, userDetailData) => {
+export const updateUserDetails = async (userId, userDetailData) => {
   return await prisma.userDetails.update({
-    where: { email },
+    where: {userId : userId },
     data: { ...userDetailData }
   });
 }
 
-export const updateUser = async (email, userData) => {
+export const updateUser = async (userId, userData) => {
   return await prisma.user.update({
-    where: { email },
+    where: { id : userId },
     data: { ...userData }
+  });
+}
+export const deleteUser = async (userId) => {
+  return await prisma.user.delete({
+    where: { id : userId }
   });
 }
 
@@ -40,8 +45,45 @@ export const UserExist = async (email) => {
 };
 
 
-export const getUser = async (email) => {
-  return await prisma.user.findUnique({ where: { email }, include: { userDetail: true } });
+export const getUser = async (userId) => {
+  return await prisma.user.findFirst({
+    where: { id: userId }, select: {
+      id: true,
+      name: true,
+      email: true,
+      password: false,
+      userDetails: {
+        select: {
+          id: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
+          address: true
+        }
+      }
+    }
+  });
+};
+export const getUsers = async ({ conditions, pagination }, includeUserDetails = false) => {
+  return await prisma.user.findMany({
+    where: { ...conditions },
+    ...pagination,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      password: false,
+      userDetails: {
+        select: {
+          id: true,
+          firstName: true,
+          middleName: true,
+          lastName: true,
+          address: true
+        }
+      }
+    }
+  });
 };
 
 export const createUserDetail = async (data) => {

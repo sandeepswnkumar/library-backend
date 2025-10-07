@@ -1,6 +1,6 @@
-enum BookingType {
-  STUDY
-  WORK
-  EVENT
-  MEETING
-}
+// enum BookingType {
+//   STUDY
+//   WORK
+//   EVENT
+//   MEETING
+// }

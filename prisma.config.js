@@ -9,8 +9,8 @@ dotenv.config();
 
 export default defineConfig({
   schema: path.join("prisma", ""),
-  migrations: {
-    seed: 'node prisma/seed.js',
+  migrations : {
+    seed : `node ${path.join("prisma", "seeders/seed.js")}`
   },
   datasource: {
     provider: "postgresql",  // Replace with your DB provider (e.g., mysql, sqlite, etc.)

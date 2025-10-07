@@ -1,26 +1,61 @@
+model UserType {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdBy Int?
+  createdAt DateTime @default(now())
+
+  users User[]
+}
+
 model User {
-  id                 Int           @id @default(autoincrement())
-  name               String
-  email              String        @unique
-  phone              String?       @unique
-  password           String
-  userType           String
-  resetPasswordToken String?
-  bookings           Booking[]
-  roles              Role[]
-  userDetails        UserDetails[]
-  userLibraries      UserLibrary[]
-  token              Token[]
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  id              Int       @id @default(autoincrement())
+  email           String    @unique
+  password        String
+  phone           String?
+  isActive        Boolean   @default(true)
+  userTypeId      Int
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+  rememberToken   String?
+  refreshToken    String?
+  createdBy       Int?
+  updatedBy       Int?
+  deletedBy       Int?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
+
+  userType      UserType             @relation(fields: [userTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userDetails   UserDetails?
+  tokens        Token[]
+  permissions   UserPagePermission[]
+  userLibraries UserLibrary[]
+  bookings      Booking[]
+  payments      Payment[]
 }
 
 model UserDetails {
-  id         Int     @id @default(autoincrement())
-  userId     Int     @unique
+  id         Int       @id @default(autoincrement())
+  userId     Int       @unique
   firstName  String
   middleName String?
   lastName   String
-  address    String?
-  user       User    @relation(fields: [userId], references: [id])
+  fullName  String
+  address1   String?
+  address2   String?
+  cityId     Int?
+  stateId    Int?
+  countryId  Int?
+  pincode    String?
+  createdBy  Int?
+  updatedBy  Int?
+  deletedBy  Int?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  deletedAt  DateTime?
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  city    City?    @relation(fields: [cityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  state   State?   @relation(fields: [stateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  country Country? @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

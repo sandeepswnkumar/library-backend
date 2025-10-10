@@ -13,6 +13,7 @@ const router = Router()
 
 router.use('/auth', authRoute);
 router.use('/users', auth, userRoute)
+router.use('/library', auth, userRoute)
 // router.use('/post', postRoute);
 // router.use('/comment', commentRoute);
 // router.use('/like', likeRoute);

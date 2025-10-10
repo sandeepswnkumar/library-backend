@@ -55,7 +55,7 @@ model UserDetails {
   deletedAt  DateTime?
 
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  city    City?    @relation(fields: [cityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  state   State?   @relation(fields: [stateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  country Country? @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  city    City?    @relation(fields: [cityId], references: [id])
+  state   State?   @relation(fields: [stateId], references: [id])
+  country Country? @relation(fields: [countryId], references: [id])
 }

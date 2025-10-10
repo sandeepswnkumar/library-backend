@@ -1,14 +1,25 @@
-// import { seedRoles } from "./role.seeder";
-// import { seedPermissions } from "./permission.seeder";
-// import { seedBookingStatus } from "./booking-status.seeder";
+import { seedPermissions } from "./permissions.seeder.js";
+import { seedCity } from "./city.seeder.js";
+import { seedCountry } from "./country.seeder.js";
+import { seedState } from "./state.seeder.js";
 import { seedUserType } from "./userType.seeder.js";
+import { seedRoles } from "./role.seeder.js";
+import { seedUser } from "./user.seeder.js";
+import { seedUserPagePermission } from "./pagePermission.seeder.js";
+import { seedBookingStatus } from "./bookingStatus.seeder.js";
+import { seedPage } from "./page.seeder.js";
 
 async function main() {
-  console.log("here")
   await seedUserType()
-  // await seedRoles();
-  // await seedPermissions();
-  // await seedBookingStatus();
+  await seedCountry()
+  await seedState()
+  await seedCity()
+  await seedPermissions()
+  await seedRoles()
+  await seedUser()
+  await seedPage()
+  await seedUserPagePermission()
+  await seedBookingStatus();
 }
 
 main()

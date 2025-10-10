@@ -1,9 +1,13 @@
 model City {
   id        Int      @id @default(autoincrement())
   name      String
+  stateId   Int
+  latitude  String?
+  longitude String?
   createdBy Int?
   createdAt DateTime @default(now())
 
+  state     State             @relation(fields: [stateId], references: [id])
   users     UserDetails[]
   libraries LibraryLocation[]
 }
@@ -11,9 +15,12 @@ model City {
 model State {
   id        Int      @id @default(autoincrement())
   name      String
+  countryId Int
   createdBy Int?
   createdAt DateTime @default(now())
 
+  city      City[]
+  country   Country           @relation(fields: [countryId], references: [id])
   users     UserDetails[]
   libraries LibraryLocation[]
 }
@@ -21,9 +28,13 @@ model State {
 model Country {
   id        Int      @id @default(autoincrement())
   name      String
+  phonecode String?
+  iso3      String?
+  iso2      String?
   createdBy Int?
   createdAt DateTime @default(now())
 
+  state     State[]
   users     UserDetails[]
   libraries LibraryLocation[]
 }

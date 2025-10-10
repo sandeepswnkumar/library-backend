@@ -8,10 +8,9 @@ export async function seedUser() {
             password: "hashed_password_here",
             phone: "9999999999",
             isActive: true,
-            userTypeId: 1,
+            userTypeId: 1001,
             userDetails: {
                 id: 1,
-                userId: 1,
                 firstName: "System",
                 lastName: "User",
                 fullName: "System User",
@@ -27,19 +26,20 @@ export async function seedUser() {
         if (existingUser) {
             continue;
         }
-        await prisma.user.create({
+
+        const userdb = await prisma.user.create({
             data: {
                 id: user.id,
                 email: user.email,
                 password: user.password,
                 phone: user.phone,
                 isActive: user.isActive,
-                userTypeId: user.userTypeId,
-                userDetails: {
-                    create: { ...user.userDetails },
-                },
+                userTypeId: user.userTypeId
             },
         });
+        const userDetails = await prisma.userDetails.create({
+            data: { userId: userdb.id, ...user.userDetails }
+        })
     }
 
     console.log("✅ Users seeded");

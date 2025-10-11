@@ -13,5 +13,3 @@ app.use('/',appRouter)
 const server = app.listen(PORT, function () {
     console.log('Listing on port ', PORT)
 })
-
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

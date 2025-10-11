@@ -9,9 +9,7 @@ export const createUser = async (userData, userDetailData) => {
     const userDetail = await tx.userDetails.create({
       data: {
         ...userDetailData,
-        user: {
-          connect: { id: user.id }
-        }
+        userId: user.id
       }
     });
 
@@ -22,20 +20,20 @@ export const createUser = async (userData, userDetailData) => {
 
 export const updateUserDetails = async (userId, userDetailData) => {
   return await prisma.userDetails.update({
-    where: {userId : userId },
+    where: { userId: userId },
     data: { ...userDetailData }
   });
 }
 
 export const updateUser = async (userId, userData) => {
   return await prisma.user.update({
-    where: { id : userId },
+    where: { id: userId },
     data: { ...userData }
   });
 }
 export const deleteUser = async (userId) => {
   return await prisma.user.delete({
-    where: { id : userId }
+    where: { id: userId }
   });
 }
 
@@ -49,7 +47,6 @@ export const getUser = async (userId) => {
   return await prisma.user.findFirst({
     where: { id: userId }, select: {
       id: true,
-      name: true,
       email: true,
       password: false,
       userDetails: {
@@ -58,7 +55,7 @@ export const getUser = async (userId) => {
           firstName: true,
           middleName: true,
           lastName: true,
-          address: true
+          address1: true
         }
       }
     }
@@ -70,7 +67,6 @@ export const getUsers = async ({ conditions, pagination }, includeUserDetails = 
     ...pagination,
     select: {
       id: true,
-      name: true,
       email: true,
       password: false,
       userDetails: {
@@ -79,7 +75,7 @@ export const getUsers = async ({ conditions, pagination }, includeUserDetails = 
           firstName: true,
           middleName: true,
           lastName: true,
-          address: true
+          address1: true
         }
       }
     }

@@ -132,37 +132,26 @@ export async function register(req, res) {
                 .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
         }
 
-        const { email, password, firstName, middleName, lastName } = req.body;
-        
+        const { email, password, firstName, middleName, lastName, userType } = req.body;
+
         const isUserExist = await UserExist(email);
         if (isUserExist)
             return res.status(ApiResponseCode.BAD_REQUEST)
                 .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "User already exists"));
 
         // ✅ Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 = salt rounds
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const userData = {
             email,
             password: hashedPassword,
-            name : buildFullName({ firstName, middleName, lastName }),
-            userType: userTypeEnum.USER,
-            // phoneVerified: false,
-            // emailVerified: false,
-            // phone: phone || null,
+            userTypeId: userType || userTypeEnum.USER
         };
         const userDetailData = {
             firstName,
             middleName: middleName || "",
             lastName,
-            // fullName: buildFullName({ firstName, middleName, lastName }),
-            // gender: gender || null,
-            // dob: dob || null,
-            // gender: gender || null,
-            // dob: dob || null,
-            // heightInCm: heightInCm || null,
-            // weightInKg: weightInKg || null,
-            // profileImage: profileImage || null,
+            fullName: buildFullName({ firstName, middleName, lastName })
         };
         const user = await createUser(userData, userDetailData);
         return res.status(ApiResponseCode.CREATED)

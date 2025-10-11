@@ -1,7 +1,8 @@
 const userTypeEnum = {
-    USER: 'USER',
-    GYM_OWNER: 'GYM_OWNER',
-    ADMIN: 'ADMIN',
+    ADMIN: 1001,
+    LIBRARY_OWNER: 1002,
+    USER: 1003,
+    LIBRARY_USER: 1004,
 }
 
 export default userTypeEnum

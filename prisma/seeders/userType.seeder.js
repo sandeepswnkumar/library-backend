@@ -6,6 +6,7 @@ export async function seedUserType() {
         { id: 1001, name: "Admin" },
         { id: 1002, name: "Library Owner" },
         { id: 1003, name: "User" },
+        { id: 1004, name: "Library User" },
     ];
 
     for (const userType of userTypes) {

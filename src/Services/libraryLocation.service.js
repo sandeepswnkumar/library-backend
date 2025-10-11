@@ -13,34 +13,56 @@ export const updateLibraryLocation = async (libraryLocationId, libraryData) => {
   });
 };
 
-export const deleteLibrary = async (libraryId, libraryData) => {
+// Soft Delete a LibraryLocation
+export const deleteLibraryLocation = async (locationId, locationData) => {
+  // This assumes you're doing a soft delete by setting `deletedAt`, `isActive = false`, etc.
   return await prisma.libraryLocation.update({
-    where: { id: libraryId },
-    data: { ...libraryData },
+    where: { id: locationId },
+    data: { ...locationData },
   });
 };
 
-export const libraryExists = async (libraryId) => {
-  return await prisma.libraryLocation.findUnique({ where: { id: libraryId } });
+// Check if a LibraryLocation exists
+export const libraryLocationExists = async (locationId) => {
+  return await prisma.libraryLocation.findUnique({
+    where: { id: locationId },
+  });
 };
 
-export const getLibrary = async (libraryId) => {
-  return await prisma.library.findFirst({
-    where: { id: libraryId },
+// Get a single LibraryLocation (with related data)
+export const getLibraryLocation = async (locationId) => {
+  return await prisma.libraryLocation.findFirst({
+    where: { id: locationId },
     include: {
-      type: true,
-      status: true,
-      locations: true,
+      library: true,
+      city: true,
+      state: true,
+      country: true,
       facilities: true,
+      users: true,
+      bookings: true,
     },
   });
 };
-export const getLibraries = async (
+
+// Get multiple LibraryLocations with optional conditions & pagination
+export const getLibraryLocations = async (
   { conditions, pagination },
   includeChilds = false
 ) => {
-  return await prisma.library.findMany({
+  return await prisma.libraryLocation.findMany({
     where: { ...conditions },
     ...pagination,
+    include: includeChilds
+      ? {
+        library: true,
+        city: true,
+        state: true,
+        country: true,
+        facilities: true,
+        users: true,
+        bookings: true,
+      }
+      : undefined,
   });
 };

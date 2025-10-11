@@ -86,7 +86,6 @@ export const generateRefreshToken = (user) => {
 
 export const verifyToken = (token, tokenType = '') => {
     try {
-
         let payload = null
         if (tokenType == tokenTypeEnum.ACCESS_TOKEN) {
             payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);

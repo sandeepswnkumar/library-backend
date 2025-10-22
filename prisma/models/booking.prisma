@@ -1,9 +1,11 @@
 model BookingUnit {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String //["HOUR","DAY","WEEK","MONTH"]
   rate      Float
   createdBy Int?
   createdAt DateTime @default(now())
+
+  libraryBooking LibraryBooking[]
 }
 
 model BookingStatus {
@@ -23,7 +25,9 @@ model Booking {
   statusId          Int
   expireOn          DateTime?
   isExpired         Boolean   @default(false)
-  amount            Float
+  dueOn             DateTime
+  nextDueOn         DateTime
+  isSubscription    Boolean
   createdBy         Int?
   updatedBy         Int?
   deletedBy         Int?
@@ -31,21 +35,47 @@ model Booking {
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
 
-  location LibraryLocation  @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  status   BookingStatus    @relation(fields: [statusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  details  BookingDetails[]
-  payments Payment[]
+  location      LibraryLocation  @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  status        BookingStatus    @relation(fields: [statusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  details       BookingDetails[]
+  payments      Payment[]
+  subscriptions Subscription[]
+  invoice Invoice[]
 }
 
 model BookingDetails {
-  id         Int      @id @default(autoincrement())
-  bookingId  Int
-  unit       String
-  rate       Float
-  noOfUnit   Int
-  start_date DateTime
-  start_time DateTime
+  id          Int      @id @default(autoincrement())
+  bookingId   Int
+  unit        String
+  rate        Float
+  noOfUnit    Int
+  startDate   DateTime
+  startTime   DateTime
+  endDate     DateTime
+  endTime     DateTime
+  grossAmount Float
+  igst        Float
+  sgst        Float
+  totalAmount Float
+  paidAmount  Float
 
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Subscription {
+  id             Int       @id @default(autoincrement())
+  bookingId      Int       @unique // One subscription per booking
+  startDate      DateTime
+  nextBillingOn  DateTime
+  endDate        DateTime? // Optional for ongoing subs
+  amountPerCycle Float
+  cycleUnit      String // "MONTH", "WEEK" etc.
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  cancelledAt    DateTime?
+
+  booking Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  Payment Payment[]
+  invoice Invoice[]
 }

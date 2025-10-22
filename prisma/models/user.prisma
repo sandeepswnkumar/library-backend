@@ -32,6 +32,7 @@ model User {
   userLibraries UserLibrary[]
   bookings      Booking[]
   payments      Payment[]
+  invoice       Invoice[]
 }
 
 model UserDetails {

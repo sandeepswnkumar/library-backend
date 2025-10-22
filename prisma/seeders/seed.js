@@ -8,6 +8,8 @@ import { seedUser } from "./user.seeder.js";
 import { seedUserPagePermission } from "./pagePermission.seeder.js";
 import { seedBookingStatus } from "./bookingStatus.seeder.js";
 import { seedPage } from "./page.seeder.js";
+import { seedLibraryStatus } from "./libraryStatus.seeder.js";
+import { seedLibraryType } from "./libraryType.js";
 
 async function main() {
   await seedUserType()
@@ -20,6 +22,9 @@ async function main() {
   await seedPage()
   await seedUserPagePermission()
   await seedBookingStatus();
+
+  await seedLibraryStatus();
+  await seedLibraryType();
 }
 
 main()

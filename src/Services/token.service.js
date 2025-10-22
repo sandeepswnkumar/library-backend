@@ -29,6 +29,15 @@ export const getTokenCurrenToken = async (userId) => {
     });
 }
 
+export const getToken = async (condition) => {
+    return await prisma.token.findFirst({
+        where: condition,
+        include: {
+            user: true // optional if you want user details too
+        }
+    });
+}
+
 
 export const deleteToken = async (condition) => {
     return await prisma.token.delete({
@@ -96,13 +105,13 @@ export const verifyToken = (token, tokenType = '') => {
         }
         return true
     } catch (err) {
-        if(token){
-            try{
-                deleteToken({token})
-            }catch(cerr){
-                console.log("cerr == ", cerr)
-            }
-        }
+        // if(token){
+        //     try{
+        //         deleteToken({token})
+        //     }catch(cerr){
+        //         console.log("cerr == ", cerr)
+        //     }
+        // }
         return false
     }
 }

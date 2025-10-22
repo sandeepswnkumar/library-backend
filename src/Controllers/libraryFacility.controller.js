@@ -6,7 +6,31 @@ import {
     getLibraryFacility,
     updateLibraryFacility,
     deleteLibraryFacility,
+    createLibraryFacility,
 } from "../Services/libraryFacility.service.js";
+import { validationResult } from "express-validator";
+
+
+export async function create(req, res) {
+    try {
+        const validationError = validationResult(req);
+        if (!validationError.isEmpty()) {
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
+        }
+        let postRequest = req.body
+        delete postRequest['libraryName']
+        const locationData = await createLibraryFacility({ ...postRequest });
+
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Facility Created Successfully', locationData));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+
 
 // Get all facilities
 export async function getAllLibraryFacilities(req, res) {

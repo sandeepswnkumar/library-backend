@@ -9,9 +9,9 @@ model UserType {
 
 model User {
   id              Int       @id @default(autoincrement())
-  email           String    @unique
+  email           String?   @unique
   password        String
-  phone           String?
+  phone           String?   @unique
   isActive        Boolean   @default(true)
   userTypeId      Int
   emailVerifiedAt DateTime?

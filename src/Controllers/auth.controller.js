@@ -3,11 +3,11 @@ import api_response from "../Utils/apiResponse.js";
 import ApiResponseCode from "../Enums/apiResponseCode.js";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
-import { buildFullName, createUser, UserExist } from "../Services/user.service.js";
+import { buildFullName, createUser, getUser, getUsers, UserExist } from "../Services/user.service.js";
 import userTypeEnum from "../Enums/userTypeEnum.js";
 import bcrypt from "bcrypt";
 import { checkPassword } from "../Services/auth.service.js";
-import { createToken, deleteToken, generateAccessToken, generateRefreshToken, getTokenCurrenToken, verifyToken } from "../Services/token.service.js";
+import { createToken, deleteToken, generateAccessToken, generateRefreshToken, getToken, getTokenCurrenToken, verifyToken } from "../Services/token.service.js";
 import tokenTypeEnum from "../Enums/tokenTypeEnum.js";
 
 export async function login(req, res) {
@@ -46,6 +46,16 @@ export async function login(req, res) {
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))
     }
 }
+export async function getCurrentUser(req, res) {
+    try {
+        const user = await getUser(req.user.id)
+        return res.status(ApiResponseCode.OK)
+            .json(new api_response(true, ApiResponseCode.OK, 'User Fetched Successfully', user))
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))
+    }
+}
 
 export async function logout(req, res) {
     try {
@@ -66,27 +76,26 @@ export async function logout(req, res) {
 
 export async function refreshToken(req, res) {
     try {
-        const validationError = validationResult(req);
-        if (!validationError.isEmpty()) {
-            throw new TypeError(JSON.stringify(validationError.array()))
+        let token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) {
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "Access Denied. No, token provided"))
         }
-        let verifiedToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-
-        const { email, refreshToken } = req.body
-
-        let user = await UserExist(email);
+        const tokenData = await getToken({ token })
+        if (!tokenData) throw new Error('Invalid Access Token');
+        let user = await getUser(tokenData.userId);
         if (!user) {
             return res.status(ApiResponseCode.BAD_REQUEST)
                 .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "Invalid user"))
         }
 
-        let token = await generateAccessAndRefreshToken(user);
-        if (!token.success) {
+        let accessToken = await generateAccessAndRefreshToken(user);
+        if (accessToken.success !== undefined && !accessToken.success) {
             return res.status(ApiResponseCode.BAD_REQUEST)
-                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, token.message))
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, accessToken.message))
         }
         return res.status(ApiResponseCode.OK)
-            .json(new api_response(true, ApiResponseCode.OK, 'Token refreshed Successfully', token))
+            .json(new api_response(true, ApiResponseCode.OK, 'Token refreshed Successfully', accessToken))
     } catch (error) {
         return res.status(ApiResponseCode.BAD_REQUEST)
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))

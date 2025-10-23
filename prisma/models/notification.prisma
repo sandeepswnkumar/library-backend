@@ -1,0 +1,71 @@
+model Notification {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  bookingId  Int?                          // Optional: Link to a specific booking
+  paymentId  Int?                          // Optional: Link to a payment
+  subscriptionId Int?                     // Optional: Link to subscription
+  title      String
+  message    String
+  type       NotificationType             // INFO, SUCCESS, ERROR, WARNING
+  channel    NotificationChannel[]        // e.g. ["IN_APP", "EMAIL"]
+  isRead     Boolean    @default(false)
+  sentAt     DateTime?                    // When it was actually sent (for email/SMS)
+  createdAt  DateTime   @default(now())
+
+  user           User           @relation(fields: [userId], references: [id])
+  booking        Booking?       @relation(fields: [bookingId], references: [id])
+  payment        Payment?       @relation(fields: [paymentId], references: [id])
+  subscription   Subscription?  @relation(fields: [subscriptionId], references: [id])
+}
+
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  ERROR
+  WARNING
+}
+
+
+enum NotificationChannel {
+  IN_APP
+  EMAIL
+  SMS
+  PUSH
+}
+
+
+// model NotificationPreference {
+//   id         Int       @id @default(autoincrement())
+//   userId     Int
+//   type       NotificationType
+//   channel    NotificationChannel
+//   enabled    Boolean    @default(true)
+
+//   user       User       @relation(fields: [userId], references: [id])
+
+//   @@unique([userId, type, channel]) // Prevent duplicates
+// }
+
+
+// model NotificationRequest {
+//   id             Int        @id @default(autoincrement())
+//   notificationId Int
+//   provider       String     // e.g., "Twilio", "SendGrid"
+//   status         String     // "PENDING", "SENT", "FAILED"
+//   requestedAt    DateTime   @default(now())
+//   responseAt     DateTime?
+  
+//   notification   Notification @relation(fields: [notificationId], references: [id])
+//   logs           NotificationRequestLog[]
+// }
+
+// model NotificationRequestLog {
+//   id                  Int       @id @default(autoincrement())
+//   notificationRequestId Int
+//   logType             String     // "REQUEST", "RESPONSE", "ERROR"
+//   payload             Json       // The data sent or received (JSON)
+//   createdAt           DateTime   @default(now())
+
+//   notificationRequest  NotificationRequest @relation(fields: [notificationRequestId], references: [id])
+// }

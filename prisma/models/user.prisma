@@ -10,7 +10,7 @@ model UserType {
 model User {
   id              Int       @id @default(autoincrement())
   email           String?   @unique
-  password        String
+  password        String?
   phone           String?   @unique
   isActive        Boolean   @default(true)
   userTypeId      Int
@@ -18,6 +18,8 @@ model User {
   phoneVerifiedAt DateTime?
   rememberToken   String?
   refreshToken    String?
+  otp             String? // store temporary OTP (optional, could store in Redis)
+  otpExpiresAt    DateTime?
   createdBy       Int?
   updatedBy       Int?
   deletedBy       Int?
@@ -33,15 +35,16 @@ model User {
   bookings      Booking[]
   payments      Payment[]
   invoice       Invoice[]
+  notifications Notification[]
 }
 
 model UserDetails {
   id         Int       @id @default(autoincrement())
   userId     Int       @unique
-  firstName  String
+  firstName  String?
   middleName String?
-  lastName   String
-  fullName   String
+  lastName   String?
+  fullName   String?
   address1   String?
   address2   String?
   cityId     Int?

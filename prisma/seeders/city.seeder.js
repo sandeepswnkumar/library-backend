@@ -2,7 +2,8 @@ import { prisma } from "./../../src/prismaClient.js"
 
 export async function seedCity() {
     const Cities = [
-        { id: 700001, name: "Siwan", stateId: 60001 }
+        { id: 700001, name: "All City", stateId: null },
+        { id: 700002, name: "Siwan", stateId: 60001 }
     ]
     for (const ct of Cities) {
         await prisma.city.upsert({

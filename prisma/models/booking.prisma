@@ -42,6 +42,7 @@ model Booking {
   payments      Payment[]
   subscriptions Subscription[]
   invoice Invoice[]
+  notifications Notification[]
 }
 
 model BookingDetails {
@@ -78,4 +79,5 @@ model Subscription {
   booking Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
   Payment Payment[]
   invoice Invoice[]
+  notifications Notification[]
 }

@@ -68,6 +68,27 @@ export const generateAccessToken = (user) => {
         }
     }
 }
+
+export const generateOTPToken = (otp, userId) => {
+    try {
+        const otpToken = jwt.sign(
+            { userId, otp },
+            process.env.OTP_TOKEN_SECRET,
+            { expiresIn: process.env.OTP_TOKEN_EXPIRY }
+        );
+        return {
+            success: true,
+            token: otpToken
+        }
+    } catch (err) {
+        return {
+            success: false,
+            token: null
+        }
+    }
+}
+
+
 export const generateRefreshToken = (user) => {
     try {
         if (!user) {

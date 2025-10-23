@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register,login,logout } from "../Controllers/auth.controller.js";
+import { register,login,logout,getCurrentUser, refreshToken } from "../Controllers/auth.controller.js";
 import { auth } from "../Middleware/auth.middleware.js";
 import CreateUserRequest from "../Requests/createUserRequest.js";
 import LoginRequest from "../Requests/loginRequest.js";
@@ -10,7 +10,8 @@ const router = Router()
 //Open Route
 router.route('/register').post(CreateUserRequest,register)
 router.route('/login').post(LoginRequest,login)
-// router.route('/refresh_token').post(RefreshTokenRequest,refresh_token)
+router.route('/current-user').get(auth, getCurrentUser)
+router.route('/refresh-token').post(refreshToken)
 
 //Auth Route
 router.route('/logout').post(auth,logout)

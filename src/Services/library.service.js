@@ -20,8 +20,8 @@ export const deleteLibrary = async (libraryId, libraryData) => {
   });
 };
 
-export const libraryExists = async (libraryId) => {
-  return await prisma.library.findUnique({ where: { id: libraryId } });
+export const libraryExists = async (conditions) => {
+  return await prisma.library.findUnique({ where: conditions });
 };
 
 export const getLibrary = async (libraryId) => {
@@ -30,11 +30,23 @@ export const getLibrary = async (libraryId) => {
     include: {
       type: true,
       status: true,
-      locations: true,
       facilities: true,
+      locations: {
+        orderBy: [
+          {
+            id: 'asc',
+          }
+        ],
+        include: {
+          city: true,
+          state: true,
+          country: true,
+        }
+      },
     },
   });
 };
+
 export const getLibraries = async (
   { conditions, pagination },
   includeChilds = false
@@ -42,5 +54,11 @@ export const getLibraries = async (
   return await prisma.library.findMany({
     where: { ...conditions },
     ...pagination,
+    include: includeChilds
+      ? {
+        status: true,
+        type: true,
+      }
+      : undefined,
   });
 };

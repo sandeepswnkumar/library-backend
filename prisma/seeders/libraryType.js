@@ -1,9 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "./../../src/prismaClient.js"
 
 export async function seedLibraryType() {
     const libraryType = [
-        { id: 30001, name: "", color: "" }
+        { id: 30001, name: "Goverment", color: "" },
+        { id: 30002, name: "Private", color: "" }
     ];
 
     for (const ls of libraryType) {

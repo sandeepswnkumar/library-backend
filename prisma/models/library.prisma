@@ -20,7 +20,7 @@ model LibraryStatus {
 
 model Library {
   id          Int       @id @default(autoincrement())
-  libraryName String
+  libraryName String    @unique
   diamension  String?
   floor       Int?
   capacity    Int?
@@ -41,26 +41,27 @@ model Library {
 }
 
 model LibraryLocation {
-  id        Int       @id @default(autoincrement())
-  libraryId Int
-  email     String?
-  phone     String?
-  address1  String?
-  address2  String?
-  cityId    Int?
-  stateId   Int?
-  countryId Int?
-  pincode   String?
-  latitude  Float?
-  longitude Float?
-  mapUrl    String?
-  isActive  Boolean   @default(true)
-  createdBy Int?
-  updatedBy Int?
-  deletedBy Int?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  id           Int       @id @default(autoincrement())
+  locationName String
+  libraryId    Int
+  email        String?
+  phone        String?
+  address1     String?
+  address2     String?
+  cityId       Int?
+  stateId      Int?
+  countryId    Int?
+  pincode      String?
+  latitude     String?
+  longitude    String?
+  mapUrl       String?
+  isActive     Boolean   @default(true)
+  createdBy    Int?
+  updatedBy    Int?
+  deletedBy    Int?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
 
   library          Library           @relation(fields: [libraryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   city             City?             @relation(fields: [cityId], references: [id], onDelete: Cascade, onUpdate: Cascade)

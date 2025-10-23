@@ -1,21 +1,47 @@
-
 import { body } from "express-validator";
 
 const CreateLibraryLocationRequest = [
+  body('libraryId')
+    .notEmpty().withMessage('Library Id is required')
+    .isNumeric().withMessage("Library Id should be number only"),
 
-    body('libraryId').notEmpty().withMessage('Library Id is required').isNumeric().withMessage("Library Id should be number only"),
-    body('email').optional().notEmpty().withMessage('Email is required').isEmail().withMessage("Invalid email type"),
-    body('phone').optional().notEmpty().withMessage('Phone is required').isNumeric().withMessage("Invalid phone type"),
-    body('address1').optional().notEmpty().withMessage('Address 1 is required'),
-    body('address2').optional().notEmpty().withMessage('Address 2 is required'),
-    body('cityId').optional().notEmpty().withMessage('City is required').isNumeric().withMessage("City should be numeric only"),
-    body('stateId').optional().notEmpty().withMessage('State is required').isNumeric().withMessage("State should be numeric only"),
-    body('countryId').optional().notEmpty().withMessage('Country is required').isNumeric().withMessage("Contry should be numeric only"),
-    body('pincode').optional().notEmpty().withMessage('Pincode is required'),
-    body('latitude').optional().notEmpty().withMessage('Latitude is required'),
-    body('longitude').optional().notEmpty().withMessage('Longitude is required'),
-    body('mapUrl').optional().notEmpty().withMessage('mapUrl is required'),
-    
-]
+  body('email')
+    .optional({ checkFalsy: true })
+    .isEmail().withMessage("Invalid email type"),
 
-export default CreateLibraryLocationRequest
+  body('phone')
+    .optional({ checkFalsy: true })
+    .isNumeric().withMessage("Invalid phone type"),
+
+  body('address1')
+    .optional({ checkFalsy: true }),
+
+  body('address2')
+    .optional({ checkFalsy: true }),
+
+  body('cityId')
+    .optional({ checkFalsy: true })
+    .isNumeric().withMessage("City should be numeric only"),
+
+  body('stateId')
+    .optional({ checkFalsy: true })
+    .isNumeric().withMessage("State should be numeric only"),
+
+  body('countryId')
+    .optional({ checkFalsy: true })
+    .isNumeric().withMessage("Country should be numeric only"),
+
+  body('pincode')
+    .optional({ checkFalsy: true }),
+
+  body('latitude')
+    .optional({ checkFalsy: true }),
+
+  body('longitude')
+    .optional({ checkFalsy: true }),
+
+  body('mapUrl')
+    .optional({ checkFalsy: true }),
+];
+
+export default CreateLibraryLocationRequest;

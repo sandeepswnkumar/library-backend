@@ -1,9 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from "./../../src/prismaClient.js"
 
 export async function seedLibraryStatus() {
     const libraryStatus = [
-        { id: 20001, name: "", color: "" }
+        { id: 20001, name: "Active", color: "" },
+        { id: 20002, name: "Deactivate", color: "" },
+        { id: 20003, name: "In Process", color: "" },
     ];
 
     for (const ls of libraryStatus) {

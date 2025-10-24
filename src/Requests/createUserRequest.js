@@ -21,6 +21,6 @@ export const CreateUserOTPRequest = [
 export const CreateUserMPINRequest = [
     body('phone').notEmpty().withMessage('Phone is required'),
     body('mpin').notEmpty().withMessage('MPIN is required'),
-    body('cmpin').notEmpty().withMessage('Confirm MPIN is required')
+    body('confirm_mpin').notEmpty().withMessage('Confirm MPIN is required')
 ]
 

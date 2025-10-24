@@ -3,25 +3,25 @@ model Payment {
   userId         Int
   bookingId      Int
   subscriptionId Int?
-  invoiceId  Int?
+  invoiceId      Int?
   amount         Float
   paymentFor     String? //"BOOKING" | "SUBSCRIPTION"
   methodId       Int
   statusId       Int //status     String    // PENDING, PAID, FAILED
   transactionId  String?
   paidOn         DateTime?
-  retryCount      Int        @default(0)
-  maxRetries      Int        @default(3)
-  nextRetryAt     DateTime?
+  retryCount     Int       @default(0)
+  maxRetries     Int       @default(3)
+  nextRetryAt    DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
-  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  booking      Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  method       PaymentMethod @relation(fields: [methodId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  status       PaymentStatus @relation(fields: [statusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  subscription Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-  invoice      Invoice[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  booking       Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  method        PaymentMethod  @relation(fields: [methodId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  status        PaymentStatus  @relation(fields: [statusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  subscription  Subscription?  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  invoice       Invoice[]
   notifications Notification[]
 }
 

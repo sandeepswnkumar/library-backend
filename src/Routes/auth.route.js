@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { register,login,logout,getCurrentUser, refreshToken, adminLogin, registerAdmin, registerUser, verifyOTP, setMpin } from "../Controllers/auth.controller.js";
+import { login,logout,getCurrentUser, refreshToken, adminLogin, registerAdmin, registerUser, verifyOTP, setMpin } from "../Controllers/auth.controller.js";
 import { auth } from "../Middleware/auth.middleware.js";
 import { CreateAdminUserRequest, CreateUserMPINRequest, CreateUserOTPRequest, CreateUserRequest } from "../Requests/createUserRequest.js";
-import { AdminLoginRequest, LoginRequest, } from "../Requests/loginRequest.js";
+import { AdminLoginRequest, LoginRequest } from "../Requests/loginRequest.js";
 import RefreshTokenRequest from "../Requests/refreshTokenRequest.js";
 
 const router = Router()

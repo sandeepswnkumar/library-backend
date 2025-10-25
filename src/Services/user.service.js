@@ -17,9 +17,15 @@ export const createUser = async (userData, userDetailData) => {
   });
 };
 
-export const createOnlyUser = async (userData) => {
-  return await prisma.user.create({
-    data: userData,
+export const userCreateOrUpdate = async (
+  conditions,
+  updateData,
+  createData
+) => {
+  return await prisma.user.upsert({
+    where: conditions,
+    update: updateData,
+    create: createData,
   });
 };
 
@@ -30,10 +36,10 @@ export const updateUserDetails = async (userId, userDetailData) => {
   });
 };
 
-export const updateUser = async (userId, userData) => {
+export const updateUser = async (conditions, userData) => {
   return await prisma.user.update({
-    where: { id: userId },
-    data: { ...userData },
+    where: conditions,
+    data: userData,
   });
 };
 export const deleteUser = async (userId) => {

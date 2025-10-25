@@ -5,21 +5,21 @@ model Invoice {
   bookingId      Int?
   subscriptionId Int?
   amount         Float
-  cgstPercent    Float?    // 0 if IGST applies
-  cgstAmount     Float?    
-  sgstPercent    Float?    // 0 if IGST applies
+  cgstPercent    Float? // 0 if IGST applies
+  cgstAmount     Float?
+  sgstPercent    Float? // 0 if IGST applies
   sgstAmount     Float?
-  igstPercent    Float?    // 0 if SGST/CGST apply
+  igstPercent    Float? // 0 if SGST/CGST apply
   igstAmount     Float?
-  totalTax       Float     // Total tax (auto-calculated)
-  totalAmount    Float     // Amount + Tax
-  status         String     @default("PENDING") // PENDING, PAID, FAILED, CANCELED
+  totalTax       Float // Total tax (auto-calculated)
+  totalAmount    Float // Amount + Tax
+  status         String    @default("PENDING") // PENDING, PAID, FAILED, CANCELED
   dueDate        DateTime
   paidOn         DateTime?
-  createdAt      DateTime   @default(now())
+  createdAt      DateTime  @default(now())
 
-  user           User       @relation(fields: [userId], references: [id])
-  booking        Booking?   @relation(fields: [bookingId], references: [id])
-  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
-  payments       Payment[]  // 🔹 one-to-many
+  user         User          @relation(fields: [userId], references: [id])
+  booking      Booking?      @relation(fields: [bookingId], references: [id])
+  subscription Subscription? @relation(fields: [subscriptionId], references: [id])
+  payments     Payment[] // 🔹 one-to-many
 }

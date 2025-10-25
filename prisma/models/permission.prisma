@@ -1,34 +1,32 @@
 model Permission {
-  id          Int      @id @default(autoincrement())
+  id          Int                  @id @default(autoincrement())
   name        String // view, create, update, delete
   description String?
   createdBy   Int?
-  createdAt   DateTime @default(now())
-
+  createdAt   DateTime             @default(now())
   permissions UserPagePermission[]
 }
 
 model Page {
-  id        Int      @id @default(autoincrement())
-  name      String
-  path      String
-  createdBy Int?
-  createdAt DateTime @default(now())
-
+  id          Int                  @id @default(autoincrement())
+  name        String
+  path        String
+  createdBy   Int?
+  createdAt   DateTime             @default(now())
   permissions UserPagePermission[]
 }
 
 model UserPagePermission {
   id           Int      @id @default(autoincrement())
-  userId       Int
+  roleId       Int
   pageId       Int
   permissionId Int
   createdBy    Int?
   createdAt    DateTime @default(now())
 
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roles      Role       @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   page       Page       @relation(fields: [pageId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  @@unique([userId, pageId, permissionId]) // composite key
+  @@unique([roleId, pageId, permissionId]) // composite key
 }

@@ -41,13 +41,14 @@ model Booking {
   details       BookingDetails[]
   payments      Payment[]
   subscriptions Subscription[]
-  invoice Invoice[]
+  invoice       Invoice[]
   notifications Notification[]
 }
 
 model BookingDetails {
   id          Int      @id @default(autoincrement())
   bookingId   Int
+  roomTypeId  Int
   unit        String
   rate        Float
   noOfUnit    Int
@@ -76,8 +77,8 @@ model Subscription {
   createdAt      DateTime  @default(now())
   cancelledAt    DateTime?
 
-  booking Booking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  Payment Payment[]
-  invoice Invoice[]
+  booking       Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  Payment       Payment[]
+  invoice       Invoice[]
   notifications Notification[]
 }

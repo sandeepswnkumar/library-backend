@@ -1,11 +1,11 @@
 model BookingUnit {
   id        Int      @id @default(autoincrement())
-  name      String //["HOUR","DAY","WEEK","MONTH"]
+  name      String //["Hourly","Daily","Weekly","Monthly"]
   rate      Float
   createdBy Int?
   createdAt DateTime @default(now())
 
-  libraryBooking LibraryBooking[]
+  libraryShifts LibraryShifts[]
 }
 
 model BookingStatus {

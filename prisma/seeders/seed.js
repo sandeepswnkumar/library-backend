@@ -10,6 +10,7 @@ import { seedBookingStatus } from "./bookingStatus.seeder.js";
 import { seedPage } from "./page.seeder.js";
 import { seedLibraryStatus } from "./libraryStatus.seeder.js";
 import { seedLibraryType } from "./libraryType.js";
+import { seedRoomType } from "./roomType.seeder.js";
 
 async function main() {
   await seedUserType()
@@ -22,9 +23,10 @@ async function main() {
   await seedPage()
   await seedUserPagePermission()
   await seedBookingStatus();
-
+  await seedRoomType()
   await seedLibraryStatus();
   await seedLibraryType();
+
 }
 
 main()

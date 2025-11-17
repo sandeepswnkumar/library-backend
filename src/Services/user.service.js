@@ -29,9 +29,24 @@ export const userCreateOrUpdate = async (
   });
 };
 
-export const updateUserDetails = async (userId, userDetailData) => {
+
+export const userDetailsCreateOrUpdate = async (
+  conditions,
+  updateData,
+  createData
+) => {
+  console.log("updateData",conditions, updateData, createData)
+  return await prisma.userDetails.upsert({
+    where: conditions,
+    update: updateData,
+    create: createData,
+  });
+};
+
+
+export const updateUserDetails = async (condition, userDetailData) => {
   return await prisma.userDetails.update({
-    where: { userId: userId },
+    where: condition,
     data: { ...userDetailData },
   });
 };
@@ -52,16 +67,25 @@ export const UserExist = async (conditions) => {
   return await prisma.user.findUnique({ where: conditions });
 };
 
+export const UserDetailsExist = async (conditions) => {
+  return await prisma.userDetails.findUnique({ where: conditions });
+};
+
 export const getUser = async (userId) => {
   return await prisma.user.findFirst({
     where: { id: userId },
     select: {
       id: true,
       email: true,
+      isOnboardingCompleted : true,
+      userTypeId : true,
       password: false,
+      userType : true,
       userDetails: {
         select: {
           id: true,
+          avatar : true,
+          fullName : true,
           firstName: true,
           middleName: true,
           lastName: true,

@@ -288,7 +288,7 @@ export async function generateAccessAndRefreshToken(user) {
       );
     }
     await updateUser(
-      { email: user.email },
+      { id: user.id },
       {
         refreshToken: refreshToken.token,
       }
@@ -301,9 +301,10 @@ export async function generateAccessAndRefreshToken(user) {
       token: accessToken.token,
       userId: user.id,
     });
+    const userData = await getUser(user.id);
     return {
       ...token,
-      user: user,
+      user: userData,
     };
   } catch (error) {
     return {
@@ -393,16 +394,29 @@ export async function registerUser(req, res) {
     }
     const { phone } = req.body;
 
+    const isUserExist = UserExist({ phone })
+    if (isUserExist) {
+      return res
+        .status(ApiResponseCode.BAD_REQUEST)
+        .json(
+          new api_response(
+            false,
+            ApiResponseCode.BAD_REQUEST,
+            "User Already Registered"
+          )
+        );
+    }
     const otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       specialChars: false,
+      lowerCaseAlphabets: false
     });
 
     const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // valid for 5 min
     const user = await userCreateOrUpdate(
       { phone },
       { otp, otpExpiresAt },
-      { phone, otp, otpExpiresAt }
+      { phone, otp, otpExpiresAt, userTypeId: userTypeEnum.USER }
     );
     // TODO: Integrate with SMS provider (Twilio, MSG91, etc.)
     console.log(`OTP for ${phone} is ${otp}`);
@@ -410,7 +424,7 @@ export async function registerUser(req, res) {
     return res
       .status(ApiResponseCode.CREATED)
       .json(
-        new api_response(true, ApiResponseCode.CREATED, "OTP Sent Successfully")
+        new api_response(true, ApiResponseCode.CREATED, `OTP Sent Successfully ${otp}`)
       );
   } catch (error) {
     return res
@@ -495,8 +509,8 @@ export const setMpin = async (req, res) => {
           )
         );
     }
-    const { phone, mpin, confirm_mpin } = req.body;
-    if (mpin !== confirm_mpin)
+    const { phone, mpin, confirmMpin } = req.body;
+    if (mpin !== confirmMpin)
       return res
         .status(ApiResponseCode.BAD_REQUEST)
         .json(
@@ -507,7 +521,7 @@ export const setMpin = async (req, res) => {
           )
         );
 
-    const user = UserExist({ phone });
+    const user = await UserExist({ phone });
     if (!user)
       return res
         .status(ApiResponseCode.BAD_REQUEST)
@@ -527,8 +541,8 @@ export const setMpin = async (req, res) => {
         );
 
     // Hash MPIN
-    const hashedMpin = await bcrypt.hash(mpin, 10);
-    await updateUser({ phone }, { password: hashedMpin });
+    const hashedMpin = await bcrypt.hash(String(mpin), 10);
+    await updateUser({ phone }, { password: hashedMpin, isMpin: true });
     return res
       .status(ApiResponseCode.CREATED)
       .json(

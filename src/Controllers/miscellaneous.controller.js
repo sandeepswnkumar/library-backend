@@ -1,5 +1,5 @@
 import ApiResponseCode from "../Enums/apiResponseCode.js"
-import { getCities, getCountry, getState } from "../Services/miscellaneous.service.js"
+import { getCities, getCountry, getRoomType, getState } from "../Services/miscellaneous.service.js"
 import api_response from "../Utils/apiResponse.js"
 
 
@@ -29,6 +29,16 @@ export async function country(req, res) {
         const country = await getCountry()
         return res.status(ApiResponseCode.OK)
             .json(new api_response(true, ApiResponseCode.OK, 'Country Fetched Successfully', country))
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))
+    }
+}
+export async function roomType(req, res) {
+    try {
+        const roomType = await getRoomType()
+        return res.status(ApiResponseCode.OK)
+            .json(new api_response(true, ApiResponseCode.OK, 'Room Type Fetched Successfully', roomType))
     } catch (error) {
         return res.status(ApiResponseCode.BAD_REQUEST)
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))

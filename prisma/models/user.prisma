@@ -8,28 +8,29 @@ model UserType {
 }
 
 model User {
-  id              Int       @id @default(autoincrement())
-  email           String?   @unique
-  password        String?
-  roleId          Int
-  phone           String?   @unique
-  isActive        Boolean   @default(true)
-  userTypeId      Int
-  emailVerifiedAt DateTime?
-  phoneVerifiedAt DateTime?
-  rememberToken   String?
-  refreshToken    String?
-  isMpin          Boolean?  @default(false)
-  otp             String? // store temporary OTP (optional, could store in Redis)
-  otpExpiresAt    DateTime?
-  createdBy       Int?
-  updatedBy       Int?
-  deletedBy       Int?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  deletedAt       DateTime?
+  id                    Int       @id @default(autoincrement())
+  email                 String?   @unique
+  password              String?
+  roleId                Int?
+  phone                 String?   @unique
+  isActive              Boolean   @default(true)
+  userTypeId            Int
+  emailVerifiedAt       DateTime?
+  phoneVerifiedAt       DateTime?
+  rememberToken         String?
+  refreshToken          String?
+  isMpin                Boolean?  @default(false)
+  isOnboardingCompleted Boolean   @default(false)
+  otp                   String? // store temporary OTP (optional, could store in Redis)
+  otpExpiresAt          DateTime?
+  createdBy             Int?
+  updatedBy             Int?
+  deletedBy             Int?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  deletedAt             DateTime?
 
-  roles         Role           @relation(fields: [roleId], references: [id])
+  roles         Role?          @relation(fields: [roleId], references: [id])
   userType      UserType       @relation(fields: [userTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userDetails   UserDetails?
   tokens        Token[]
@@ -53,6 +54,7 @@ model UserDetails {
   stateId    Int?
   countryId  Int?
   pincode    String?
+  avatar     String?
   createdBy  Int?
   updatedBy  Int?
   deletedBy  Int?

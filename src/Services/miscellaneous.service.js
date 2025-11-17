@@ -11,3 +11,7 @@ export const getState = async () => {
 export const getCountry = async () => {
     return await prisma.country.findMany();
 };
+
+export const getRoomType = async () => {
+    return await prisma.roomType.findMany();
+};

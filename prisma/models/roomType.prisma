@@ -1,0 +1,6 @@
+model RoomType {
+    id        Int      @id @default(autoincrement())
+    name      String   @unique
+    createdBy Int?
+    createdAt DateTime @default(now())
+}

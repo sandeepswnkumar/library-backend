@@ -1,13 +1,13 @@
 model City {
   id        Int      @id @default(autoincrement())
   name      String
-  stateId   Int
+  stateId   Int?
   latitude  String?
   longitude String?
   createdBy Int?
   createdAt DateTime @default(now())
 
-  state     State             @relation(fields: [stateId], references: [id])
+  state     State?             @relation(fields: [stateId], references: [id])
   users     UserDetails[]
   libraries LibraryLocation[]
 }

@@ -21,7 +21,7 @@ model LibraryStatus {
 model Library {
   id          Int       @id @default(autoincrement())
   libraryName String    @unique
-  diamension  String?
+  dimension   Int?
   floor       Int?
   capacity    Int?
   statusId    Int
@@ -41,61 +41,63 @@ model Library {
 }
 
 model LibraryLocation {
-  id           Int       @id @default(autoincrement())
-  locationName String
-  libraryId    Int
-  email        String?
-  phone        String?
-  address1     String?
-  address2     String?
-  cityId       Int?
-  stateId      Int?
-  countryId    Int?
-  pincode      String?
-  latitude     String?
-  longitude    String?
-  mapUrl       String?
-  isActive     Boolean   @default(true)
-  createdBy    Int?
-  updatedBy    Int?
-  deletedBy    Int?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  deletedAt    DateTime?
+  id             Int       @id @default(autoincrement())
+  locationName   String
+  libraryId      Int
+  email          String?
+  phone          String?
+  address1       String?
+  address2       String?
+  cityId         Int?
+  stateId        Int?
+  countryId      Int?
+  pincode        String?
+  latitude       String?
+  longitude      String?
+  mapUrl         String?
+  libraryShiftId Int?
+  isActive       Boolean   @default(true)
+  createdBy      Int?
+  updatedBy      Int?
+  deletedBy      Int?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
 
-  library          Library           @relation(fields: [libraryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  city             City?             @relation(fields: [cityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  state            State?            @relation(fields: [stateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  country          Country?          @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  facilities       LibraryFacility[]
-  users            UserLibrary[]
-  bookings         Booking[]
-  LibraryBooking   LibraryBooking?   @relation(fields: [libraryBookingId], references: [id])
-  libraryBookingId Int?
+  library       Library           @relation(fields: [libraryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  city          City?             @relation(fields: [cityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  state         State?            @relation(fields: [stateId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  country       Country?          @relation(fields: [countryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  facilities    LibraryFacility[]
+  users         UserLibrary[]
+  bookings      Booking[]
+  libraryShifts LibraryShifts[]
+  roomTypes     LibraryRoomType[]
 }
 
 model LibraryFacility {
-  id                Int       @id @default(autoincrement())
+  id                Int             @id @default(autoincrement())
   libraryId         Int
   libraryLocationId Int
-  name              String
+  facilityId        Int
   description       String?
-  imageUrl          String?
   createdBy         Int?
   updatedBy         Int?
   deletedBy         Int?
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
   deletedAt         DateTime?
+  library           Library         @relation(fields: [libraryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  location          LibraryLocation @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  library  Library         @relation(fields: [libraryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  location LibraryLocation @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  @@unique([libraryId, libraryLocationId, facilityId])
 }
 
-model LibraryBooking {
+model LibraryShifts {
   id                Int       @id @default(autoincrement())
   libraryId         Int
   libraryLocationId Int
+  roomTypeId        Int
   bookingUnitId     Int
   rate              Float     @default(0)
   createdBy         Int?
@@ -105,8 +107,26 @@ model LibraryBooking {
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
 
-  bookingUnit BookingUnit       @relation(fields: [bookingUnitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  locations   LibraryLocation[]
+  bookingUnit BookingUnit     @relation(fields: [bookingUnitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roomType    LibraryRoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  locations   LibraryLocation @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([libraryId, libraryLocationId, roomTypeId, bookingUnitId])
+}
+
+model LibraryRoomType {
+  id                Int               @id @default(autoincrement())
+  libraryId         Int
+  libraryLocationId Int
+  roomType          String
+  createdBy         Int?
+  updatedBy         Int?
+  deletedBy         Int?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
+  libraryShifts     LibraryShifts[]
+  locations         LibraryLocation[]
 }
 
 model UserLibrary {

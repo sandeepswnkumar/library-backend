@@ -31,6 +31,25 @@ export async function create(req, res) {
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
     }
 }
+export async function addLibraryRoomType(req, res) {
+    try {
+        const validationError = validationResult(req);
+        if (!validationError.isEmpty()) {
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
+        }
+        let postRequest = req.body
+        delete postRequest['libraryName']
+        const locationData = await createLibraryLocation({ ...postRequest });
+
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Location Created Successfully', locationData));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
 
 // GET all library locations with optional filters
 export async function getAllLibraryLocations(req, res) {

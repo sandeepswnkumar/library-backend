@@ -14,5 +14,5 @@ export async function seedBookingStatus() {
         });
     }
 
-    console.log("✅ Library Status seeded");
+    console.log("✅ Booking Status seeded");
 }

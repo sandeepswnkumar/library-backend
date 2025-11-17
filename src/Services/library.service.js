@@ -30,7 +30,6 @@ export const getLibrary = async (libraryId) => {
     include: {
       type: true,
       status: true,
-      facilities: true,
       locations: {
         orderBy: [
           {

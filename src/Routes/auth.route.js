@@ -14,8 +14,8 @@ router.route('/login').post(LoginRequest,login)
 
 router.route('/register-admin').post(CreateAdminUserRequest,registerAdmin)
 router.route('/register-user').post(CreateUserRequest,registerUser)
-router.route('/otp').post(CreateUserOTPRequest,verifyOTP)
-router.route('/set-mpin').post(CreateUserMPINRequest,setMpin)
+router.route('/verify-otp').post(CreateUserOTPRequest,verifyOTP)
+router.route('/create-mpin').post(CreateUserMPINRequest,setMpin)
 router.route('/current-user').get(auth, getCurrentUser)
 router.route('/refresh-token').post(refreshToken)
 

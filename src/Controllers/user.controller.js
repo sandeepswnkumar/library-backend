@@ -1,8 +1,10 @@
 
 import api_response from "../Utils/apiResponse.js";
 import ApiResponseCode from "../Enums/apiResponseCode.js";
-import { deleteUser, getUser, getUsers, updateUserDetails } from "../Services/user.service.js";
+import { buildFullName, deleteUser, getUser, getUsers, updateUser, updateUserDetails, userDetailsCreateOrUpdate, UserDetailsExist, UserExist } from "../Services/user.service.js";
 import { getOffset } from "../Utils/helper.js";
+import { Prisma } from '@prisma/client';
+import { PrismaClass } from "../prismaClient.js";
 
 export async function getAllUsers(req, res) {
     try {
@@ -53,16 +55,20 @@ export async function deleteUserById(req, res) {
 export async function updateUsersById(req, res) {
     try {
         const { id } = req.params
-        if (!parseInt(id)) {
-            throw new Error("User id is required")
+        if (!parseInt(id)) throw new Error("User id is required")
+        if (Object.keys(req.body).length == 0) throw new Error("Data is required")
+
+        const user = UserExist({ userId: parseInt(id) })
+        if (!user) throw new Error("Invalid User")
+        const { firstName, lastName, middleName } = req.body
+        const { email } = req.body
+        await userDetailsCreateOrUpdate({ userId: parseInt(id) }, { firstName, lastName, middleName, fullName : buildFullName({firstName, middleName, lastName}) }, { firstName, lastName, middleName, fullName : buildFullName({firstName, middleName, lastName}), userId: parseInt(id) })
+        if (!user.isOnboardingCompleted) {
+            await updateUser({ id: parseInt(id) }, { email, isOnboardingCompleted: true })
         }
-        if (Object.keys(req.body).length == 0) {
-            throw new Error("Data is required")
-        }
-        await updateUserDetails(parseInt(id), req.body)
-        const user = await getUser(parseInt(id))
+        const userData = await getUser(parseInt(id))
         return res.status(ApiResponseCode.CREATED)
-            .json(new api_response(true, ApiResponseCode.OK, 'User Updated Successfully', user))
+            .json(new api_response(true, ApiResponseCode.OK, 'User Updated Successfully', userData))
     } catch (error) {
         return res.status(ApiResponseCode.BAD_REQUEST)
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))

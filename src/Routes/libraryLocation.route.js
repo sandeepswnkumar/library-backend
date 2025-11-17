@@ -4,7 +4,8 @@ import {
   getAllLibraryLocations,
   getLibraryLocationById,
   updateLibraryLocationById,
-  deleteLibraryLocationById
+  deleteLibraryLocationById,
+  addLibraryRoomType
 } from "../Controllers/libraryLocation.controller.js";
 import CreateLibraryLocationRequest from "../Requests/CreateLibraryLocationRequest.js";
 
@@ -15,5 +16,6 @@ router.get("/", getAllLibraryLocations);
 router.get("/:id", getLibraryLocationById);
 router.put("/:id", updateLibraryLocationById);
 router.delete("/:id", deleteLibraryLocationById);
+router.post("room-type", addLibraryRoomType);
 
 export default router;

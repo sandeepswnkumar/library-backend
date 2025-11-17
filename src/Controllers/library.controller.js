@@ -8,7 +8,7 @@ import { validationResult } from "express-validator";
 export async function create(req, res) {
     try {
         const validationError = validationResult(req);
-        
+
         if (!validationError.isEmpty()) return res.status(ApiResponseCode.BAD_REQUEST)
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
 
@@ -16,7 +16,7 @@ export async function create(req, res) {
         const library = await libraryExists({ libraryName })
         if (library) throw new Error('Library already exists');
 
-        const libaryData = await createLibrary({...req.body})
+        const libaryData = await createLibrary({ ...req.body })
         return res.status(ApiResponseCode.CREATED)
             .json(new api_response(true, ApiResponseCode.CREATED, 'Library Created Successfully', libaryData))
 
@@ -29,13 +29,11 @@ export async function create(req, res) {
 
 export async function getAllLibrary(req, res) {
     try {
-        const { limit = 10, page, name, email } = req.query
+        const { limit = 10, page, libraryName } = req.query
         const skip = getOffset(limit, page)
         let pagination = { take: parseInt(limit), skip }
         let conditions = {}
-        if (email) conditions['email'] = name
-        if (name) conditions['name'] = name
-
+        if (libraryName) conditions['libraryName'] = { "contains": libraryName, mode: 'insensitive' }
         const libraries = await getLibraries({ conditions, pagination }, true)
 
         return res.status(ApiResponseCode.OK)

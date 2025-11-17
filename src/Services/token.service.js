@@ -53,7 +53,7 @@ export const generateAccessToken = (user) => {
         }
         // ✅ Generate tokens
         const accessToken = jwt.sign(
-            { userId: user.id, email: user.email },
+            { userId: user.id, email: user?.email || null, phone : user?.phone || null },
             process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
         );
@@ -96,7 +96,7 @@ export const generateRefreshToken = (user) => {
         }
         // ✅ Generate tokens
         const refreshToken = jwt.sign(
-            { userId: user.id, email: user.email },
+            { userId: user.id, email: user?.email || null, phone : user?.phone || null },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
         );

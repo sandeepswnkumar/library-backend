@@ -6,7 +6,10 @@ import {
     getLibraryLocation,
     updateLibraryLocation,
     deleteLibraryLocation,
-    createLibraryLocation
+    createLibraryLocation,
+    createLibraryRoomType,
+    libraryRoomType,
+    islibraryRoomTypeExist
 } from "../Services/libraryLocation.service.js";
 import { validationResult } from "express-validator";
 
@@ -39,11 +42,29 @@ export async function addLibraryRoomType(req, res) {
                 .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
         }
         let postRequest = req.body
-        delete postRequest['libraryName']
-        const locationData = await createLibraryLocation({ ...postRequest });
+
+        const isLibaryRoom = await islibraryRoomTypeExist(postRequest)
+        if(isLibaryRoom){
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "Room Type already exist"));
+        }
+
+        const libraryRoomType = await createLibraryRoomType({ ...postRequest });
 
         return res.status(ApiResponseCode.CREATED)
-            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Location Created Successfully', locationData));
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Room Type Created Successfully', libraryRoomType));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+
+export async function getLibraryRoomType(req, res) {
+    try {
+        const libraryRoomType = await libraryRoomType();
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Room Type fetched Successfully', libraryRoomType));
 
     } catch (error) {
         return res.status(ApiResponseCode.BAD_REQUEST)

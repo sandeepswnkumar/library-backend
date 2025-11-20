@@ -41,6 +41,7 @@ export const getLibraryLocation = async (locationId) => {
       facilities: true,
       users: true,
       bookings: true,
+      roomTypes: true
     },
   });
 };
@@ -61,8 +62,25 @@ export const getLibraryLocations = async (
         country: true,
         facilities: true,
         users: true,
-        bookings: true,
+        bookings: true
       }
       : undefined,
   });
+};
+
+
+export const createLibraryRoomType = async (libraryRoomTypeData) => {
+  return await prisma.libraryRoomType.create({
+    data: libraryRoomTypeData,
+  });
+};
+
+export const islibraryRoomTypeExist = async (conditions) => {
+  return await prisma.libraryRoomType.findFirst({
+    where: conditions
+  });
+};
+
+export const libraryRoomType = async () => {
+  return await prisma.libraryRoomType.findMany();
 };

@@ -126,7 +126,7 @@ model LibraryRoomType {
   updatedAt         DateTime          @updatedAt
   deletedAt         DateTime?
   libraryShifts     LibraryShifts[]
-  locations         LibraryLocation[]
+  locations   LibraryLocation @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model UserLibrary {

@@ -5,17 +5,19 @@ import {
   getLibraryLocationById,
   updateLibraryLocationById,
   deleteLibraryLocationById,
-  addLibraryRoomType
+  addLibraryRoomType,
+  getLibraryRoomType
 } from "../Controllers/libraryLocation.controller.js";
 import CreateLibraryLocationRequest from "../Requests/CreateLibraryLocationRequest.js";
 
 const router = express.Router();
 
+router.post("/room-type", addLibraryRoomType);
+router.get("/room-type", getLibraryRoomType);
 router.post("/", CreateLibraryLocationRequest, create);
 router.get("/", getAllLibraryLocations);
 router.get("/:id", getLibraryLocationById);
 router.put("/:id", updateLibraryLocationById);
 router.delete("/:id", deleteLibraryLocationById);
-router.post("room-type", addLibraryRoomType);
 
 export default router;

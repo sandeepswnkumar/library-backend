@@ -35,7 +35,7 @@ export const userDetailsCreateOrUpdate = async (
   updateData,
   createData
 ) => {
-  console.log("updateData",conditions, updateData, createData)
+  console.log("updateData", conditions, updateData, createData)
   return await prisma.userDetails.upsert({
     where: conditions,
     update: updateData,
@@ -77,15 +77,15 @@ export const getUser = async (userId) => {
     select: {
       id: true,
       email: true,
-      isOnboardingCompleted : true,
-      userTypeId : true,
+      isOnboardingCompleted: true,
+      userTypeId: true,
       password: false,
-      userType : true,
+      userType: true,
       userDetails: {
         select: {
           id: true,
-          avatar : true,
-          fullName : true,
+          avatar: true,
+          fullName: true,
           firstName: true,
           middleName: true,
           lastName: true,

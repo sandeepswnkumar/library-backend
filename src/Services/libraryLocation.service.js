@@ -38,10 +38,21 @@ export const getLibraryLocation = async (locationId) => {
       city: true,
       state: true,
       country: true,
-      facilities: true,
       users: true,
       bookings: true,
-      roomTypes: true
+      roomTypes: true,
+      libraryBookingUnit: true,
+      libraryShifts: {
+        include: {
+          roomType: true,
+          bookingUnit: true
+        }
+      },
+      libraryFacilities: {
+        include: {
+          facility: true
+        }
+      }
     },
   });
 };
@@ -60,7 +71,6 @@ export const getLibraryLocations = async (
         city: true,
         state: true,
         country: true,
-        facilities: true,
         users: true,
         bookings: true
       }
@@ -74,6 +84,11 @@ export const createLibraryRoomType = async (libraryRoomTypeData) => {
     data: libraryRoomTypeData,
   });
 };
+export const deleteLibraryRoomType = async (conditions) => {
+  return await prisma.libraryRoomType.delete({
+    where: conditions,
+  });
+};
 
 export const islibraryRoomTypeExist = async (conditions) => {
   return await prisma.libraryRoomType.findFirst({
@@ -84,3 +99,26 @@ export const islibraryRoomTypeExist = async (conditions) => {
 export const libraryRoomType = async () => {
   return await prisma.libraryRoomType.findMany();
 };
+
+export const createLibraryBookingUnit = async (libraryRoomTypeData) => {
+  return await prisma.libraryBookingUnit.create({
+    data: libraryRoomTypeData,
+  });
+};
+
+export const deleteLibraryBookingUnit = async (conditions) => {
+  return await prisma.libraryBookingUnit.delete({
+    where: conditions,
+  });
+};
+
+export const islibraryBookingUnitExist = async (conditions) => {
+  return await prisma.libraryBookingUnit.findFirst({
+    where: conditions
+  });
+};
+
+export const libraryBookingUnit = async () => {
+  return await prisma.libraryBookingUnit.findMany();
+};
+

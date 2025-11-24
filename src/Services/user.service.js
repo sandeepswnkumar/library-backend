@@ -5,7 +5,7 @@ export const createUser = async (userData, userDetailData) => {
     const user = await tx.user.create({
       data: userData,
     });
-
+    console.log("ds", user)
     const userDetail = await tx.userDetails.create({
       data: {
         ...userDetailData,

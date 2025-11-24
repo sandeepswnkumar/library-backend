@@ -1,0 +1,15 @@
+model BookingType {
+  id        Int      @id @default(autoincrement())
+  name      String //["Hourly","Daily","Weekly","Monthly"]
+  createdBy Int?
+  createdAt DateTime @default(now())
+}
+
+model Facilities {
+  id                Int               @id @default(autoincrement())
+  name              String //["Hourly","Daily","Weekly","Monthly"]
+  imageUrl          String //["Hourly","Daily","Weekly","Monthly"]
+  createdBy         Int?
+  createdAt         DateTime          @default(now())
+  libraryFacilities LibraryFacility[]
+}

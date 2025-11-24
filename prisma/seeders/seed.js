@@ -11,6 +11,8 @@ import { seedPage } from "./page.seeder.js";
 import { seedLibraryStatus } from "./libraryStatus.seeder.js";
 import { seedLibraryType } from "./libraryType.js";
 import { seedRoomType } from "./roomType.seeder.js";
+import { seedBookingUnit } from "./bookingUnit.seeder.js";
+import { facilitiesSeeder } from "./facilities.seeer.js";
 
 async function main() {
   await seedUserType()
@@ -26,6 +28,8 @@ async function main() {
   await seedRoomType()
   await seedLibraryStatus();
   await seedLibraryType();
+  await seedBookingUnit();
+  await facilitiesSeeder();
 
 }
 

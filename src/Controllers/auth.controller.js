@@ -350,7 +350,7 @@ export async function registerAdmin(req, res) {
     const userData = {
       email,
       password: hashedPassword,
-      userTypeId: userType || userTypeEnum.USER,
+      userTypeId: userType || userTypeEnum.ADMIN,
     };
     const userDetailData = {
       firstName,

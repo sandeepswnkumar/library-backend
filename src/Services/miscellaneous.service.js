@@ -15,3 +15,9 @@ export const getCountry = async () => {
 export const getRoomType = async () => {
     return await prisma.roomType.findMany();
 };
+export const getBookingUnit = async () => {
+    return await prisma.bookingUnit.findMany();
+};
+export const getFacilities = async () => {
+    return await prisma.facilities.findMany();
+};

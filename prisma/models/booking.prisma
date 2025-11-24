@@ -4,8 +4,6 @@ model BookingUnit {
   rate      Float
   createdBy Int?
   createdAt DateTime @default(now())
-
-  libraryShifts LibraryShifts[]
 }
 
 model BookingStatus {

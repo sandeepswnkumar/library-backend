@@ -4,6 +4,7 @@ import userRoute from "./Routes/user.route.js"
 import libaryRoute from "./Routes/library.route.js"
 import libaryLocationRoute from "./Routes/libraryLocation.route.js"
 import libaryFacilityRoute from "./Routes/libraryFacility.route.js"
+import libraryShiftAndPrice from "./Routes/libraryShiftAndPrice.route.js"
 import miscellaneousRoute from "./Routes/miscellaneous.route.js"
 import { auth } from "./Middleware/auth.middleware.js";
 import api_response from "./Utils/apiResponse.js";
@@ -15,6 +16,7 @@ router.use('/auth', authRoute);
 router.use('/users', auth, userRoute)
 router.use('/library', auth, libaryRoute)
 router.use('/library-location', auth, libaryLocationRoute)
+router.use('/library-shift-price', auth, libraryShiftAndPrice)
 router.use('/library-facility', auth, libaryFacilityRoute)
 router.use('/misc', auth, miscellaneousRoute)
 

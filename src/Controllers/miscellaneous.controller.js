@@ -1,5 +1,5 @@
 import ApiResponseCode from "../Enums/apiResponseCode.js"
-import { getCities, getCountry, getRoomType, getState } from "../Services/miscellaneous.service.js"
+import { getBookingUnit, getCities, getCountry, getFacilities, getRoomType, getState } from "../Services/miscellaneous.service.js"
 import api_response from "../Utils/apiResponse.js"
 
 
@@ -39,6 +39,26 @@ export async function roomType(req, res) {
         const roomType = await getRoomType()
         return res.status(ApiResponseCode.OK)
             .json(new api_response(true, ApiResponseCode.OK, 'Room Type Fetched Successfully', roomType))
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))
+    }
+}
+export async function bookingUnit(req, res) {
+    try {
+        const roomType = await getBookingUnit()
+        return res.status(ApiResponseCode.OK)
+            .json(new api_response(true, ApiResponseCode.OK, 'Booking Unit Fetched Successfully', roomType))
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))
+    }
+}
+export async function facilities(req, res) {
+    try {
+        const roomType = await getFacilities()
+        return res.status(ApiResponseCode.OK)
+            .json(new api_response(true, ApiResponseCode.OK, 'Facilities Fetched Successfully', roomType))
     } catch (error) {
         return res.status(ApiResponseCode.BAD_REQUEST)
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))

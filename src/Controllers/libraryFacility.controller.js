@@ -19,7 +19,6 @@ export async function create(req, res) {
                 .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
         }
         let postRequest = req.body
-        delete postRequest['libraryName']
         const locationData = await createLibraryFacility({ ...postRequest });
 
         return res.status(ApiResponseCode.CREATED)

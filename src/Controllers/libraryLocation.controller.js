@@ -9,7 +9,12 @@ import {
     createLibraryLocation,
     createLibraryRoomType,
     libraryRoomType,
-    islibraryRoomTypeExist
+    islibraryRoomTypeExist,
+    deleteLibraryRoomType,
+    islibraryBookingUnitExist,
+    createLibraryBookingUnit,
+    deleteLibraryBookingUnit,
+    libraryBookingUnit
 } from "../Services/libraryLocation.service.js";
 import { validationResult } from "express-validator";
 
@@ -34,44 +39,6 @@ export async function create(req, res) {
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
     }
 }
-export async function addLibraryRoomType(req, res) {
-    try {
-        const validationError = validationResult(req);
-        if (!validationError.isEmpty()) {
-            return res.status(ApiResponseCode.BAD_REQUEST)
-                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
-        }
-        let postRequest = req.body
-
-        const isLibaryRoom = await islibraryRoomTypeExist(postRequest)
-        if(isLibaryRoom){
-            return res.status(ApiResponseCode.BAD_REQUEST)
-                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "Room Type already exist"));
-        }
-
-        const libraryRoomType = await createLibraryRoomType({ ...postRequest });
-
-        return res.status(ApiResponseCode.CREATED)
-            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Room Type Created Successfully', libraryRoomType));
-
-    } catch (error) {
-        return res.status(ApiResponseCode.BAD_REQUEST)
-            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
-    }
-}
-
-export async function getLibraryRoomType(req, res) {
-    try {
-        const libraryRoomType = await libraryRoomType();
-        return res.status(ApiResponseCode.CREATED)
-            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Room Type fetched Successfully', libraryRoomType));
-
-    } catch (error) {
-        return res.status(ApiResponseCode.BAD_REQUEST)
-            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
-    }
-}
-
 // GET all library locations with optional filters
 export async function getAllLibraryLocations(req, res) {
     try {
@@ -159,3 +126,117 @@ export async function deleteLibraryLocationById(req, res) {
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
     }
 }
+
+
+
+export async function addLibraryRoomType(req, res) {
+    try {
+        const validationError = validationResult(req);
+        if (!validationError.isEmpty()) {
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
+        }
+        let postRequest = req.body
+
+        const isLibaryRoom = await islibraryRoomTypeExist(postRequest)
+        if(isLibaryRoom){
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "Room Type already exist"));
+        }
+
+        const libraryRoomType = await createLibraryRoomType({ ...postRequest });
+
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Room Type Created Successfully', libraryRoomType));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+
+export async function deleteLbRoomType(req, res) {
+    try {
+        const { id } = req.params;
+        if (!parseInt(id)) {
+            throw new Error("Library Room type ID is required");
+        }
+        const libraryRoomType = await deleteLibraryRoomType({id : parseInt(id)});
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Room Type Delete Successfully', libraryRoomType));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+
+export async function getLibraryRoomType(req, res) {
+    try {
+        const libraryRoomType = await libraryRoomType();
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Room Type fetched Successfully', libraryRoomType));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+
+
+
+
+export async function addLibraryBookingUnit(req, res) {
+    try {
+        const validationError = validationResult(req);
+        if (!validationError.isEmpty()) {
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, validationError.array()));
+        }
+        let postRequest = req.body
+
+        const isLibaryBookingUnit = await islibraryBookingUnitExist(postRequest)
+        if(isLibaryBookingUnit){
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, "Library Booking Unit already exist"));
+        }
+
+        const libraryBookingUnit = await createLibraryBookingUnit({ ...postRequest });
+
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Booking Unit Created Successfully', libraryBookingUnit));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+
+export async function deleteLbBookingUnit(req, res) {
+    try {
+        const { id } = req.params;
+        if (!parseInt(id)) {
+            throw new Error("Library Booking Unit is required");
+        }
+        const libraryBookingUnit = await deleteLibraryBookingUnit({id : parseInt(id)});
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Booking Unit Delete Successfully', libraryBookingUnit));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+
+export async function getLibraryBookingUnit(req, res) {
+    try {
+        const libraryBookingUnit = await libraryBookingUnit();
+        return res.status(ApiResponseCode.CREATED)
+            .json(new api_response(true, ApiResponseCode.CREATED, 'Library Booking Unit fetched Successfully', libraryBookingUnit));
+
+    } catch (error) {
+        return res.status(ApiResponseCode.BAD_REQUEST)
+            .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message));
+    }
+}
+

@@ -3,7 +3,6 @@ import api_response from "../Utils/apiResponse.js";
 import ApiResponseCode from "../Enums/apiResponseCode.js";
 import { buildFullName, deleteUser, getUser, getUsers, updateUser, updateUserDetails, userDetailsCreateOrUpdate, UserDetailsExist, UserExist } from "../Services/user.service.js";
 import { getOffset } from "../Utils/helper.js";
-import { Prisma } from '@prisma/client';
 import { PrismaClass } from "../prismaClient.js";
 
 export async function getAllUsers(req, res) {
@@ -60,9 +59,8 @@ export async function updateUsersById(req, res) {
 
         const user = UserExist({ userId: parseInt(id) })
         if (!user) throw new Error("Invalid User")
-        const { firstName, lastName, middleName } = req.body
-        const { email } = req.body
-        await userDetailsCreateOrUpdate({ userId: parseInt(id) }, { firstName, lastName, middleName, fullName : buildFullName({firstName, middleName, lastName}) }, { firstName, lastName, middleName, fullName : buildFullName({firstName, middleName, lastName}), userId: parseInt(id) })
+        const { email, firstName, lastName, middleName } = req.body
+        await userDetailsCreateOrUpdate({ userId: parseInt(id) }, { firstName, lastName, middleName, fullName: buildFullName({ firstName, middleName, lastName }) }, { firstName, lastName, middleName, fullName: buildFullName({ firstName, middleName, lastName }), userId: parseInt(id) })
         if (!user.isOnboardingCompleted) {
             await updateUser({ id: parseInt(id) }, { email, isOnboardingCompleted: true })
         }
@@ -70,6 +68,10 @@ export async function updateUsersById(req, res) {
         return res.status(ApiResponseCode.CREATED)
             .json(new api_response(true, ApiResponseCode.OK, 'User Updated Successfully', userData))
     } catch (error) {
+        if(error instanceof PrismaClass.PrismaClientKnownRequestError && error.code == 'P2002'){
+            return res.status(ApiResponseCode.BAD_REQUEST)
+                .json(new api_response(false, ApiResponseCode.BAD_REQUEST, 'Email already registered'))
+        }
         return res.status(ApiResponseCode.BAD_REQUEST)
             .json(new api_response(false, ApiResponseCode.BAD_REQUEST, error.message))
     }

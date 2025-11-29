@@ -172,7 +172,7 @@ export async function login(req, res) {
 
 export async function getCurrentUser(req, res) {
   try {
-    const user = await getUser(req.user.id);
+    const user = await getToken({ userId: req.user.id });
     return res
       .status(ApiResponseCode.OK)
       .json(
@@ -393,8 +393,7 @@ export async function registerUser(req, res) {
         );
     }
     const { phone } = req.body;
-
-    const isUserExist = UserExist({ phone })
+    const isUserExist = await UserExist({ phone })
     if (isUserExist) {
       return res
         .status(ApiResponseCode.BAD_REQUEST)

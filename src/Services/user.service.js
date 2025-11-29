@@ -5,7 +5,6 @@ export const createUser = async (userData, userDetailData) => {
     const user = await tx.user.create({
       data: userData,
     });
-    console.log("ds", user)
     const userDetail = await tx.userDetails.create({
       data: {
         ...userDetailData,
@@ -35,7 +34,7 @@ export const userDetailsCreateOrUpdate = async (
   updateData,
   createData
 ) => {
-  console.log("updateData", conditions, updateData, createData)
+  // console.log("updateData", conditions, updateData, createData)
   return await prisma.userDetails.upsert({
     where: conditions,
     update: updateData,

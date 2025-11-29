@@ -33,7 +33,13 @@ export const getToken = async (condition) => {
     return await prisma.token.findFirst({
         where: condition,
         include: {
-            user: true // optional if you want user details too
+            user: {
+                include : {
+                    userDetails : true,
+                    userType : true
+                }
+            }
+
         }
     });
 }

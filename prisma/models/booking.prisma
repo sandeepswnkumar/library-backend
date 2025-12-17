@@ -23,9 +23,9 @@ model Booking {
   statusId          Int
   expireOn          DateTime?
   isExpired         Boolean   @default(false)
-  dueOn             DateTime
-  nextDueOn         DateTime
-  isSubscription    Boolean
+  dueOn             DateTime?
+  nextDueOn         DateTime?
+  isSubscription    Boolean   @default(false)
   createdBy         Int?
   updatedBy         Int?
   deletedBy         Int?
@@ -33,10 +33,10 @@ model Booking {
   updatedAt         DateTime  @updatedAt
   deletedAt         DateTime?
 
-  location      LibraryLocation  @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  status        BookingStatus    @relation(fields: [statusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  details       BookingDetails[]
+  location      LibraryLocation @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  status        BookingStatus   @relation(fields: [statusId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  details       BookingDetails?
   payments      Payment[]
   subscriptions Subscription[]
   invoice       Invoice[]
@@ -44,23 +44,30 @@ model Booking {
 }
 
 model BookingDetails {
-  id          Int      @id @default(autoincrement())
-  bookingId   Int
-  roomTypeId  Int
-  unit        String
-  rate        Float
-  noOfUnit    Int
-  startDate   DateTime
-  startTime   DateTime
-  endDate     DateTime
-  endTime     DateTime
-  grossAmount Float
-  igst        Float
-  sgst        Float
-  totalAmount Float
-  paidAmount  Float
+  id                 Int       @id @default(autoincrement())
+  bookingId          Int       @unique
+  bookingShiftId     Int?    
+  roomType           String
+  unit               String
+  shiftPeriod        String
+  rate               Float     @default(0)
+  noOfUnit           Int       @default(0)
+  startDate          DateTime
+  startTime          DateTime?
+  endDate            DateTime?
+  endTime            DateTime?
+  shiftStartTime     String?
+  shiftEndTime       String?
+  bookingAmount      Float
+  discountPercentage Float     @default(0)
+  discountAmount     Float     @default(0)
+  igst               Float     @default(0)
+  sgst               Float     @default(0)
+  totalAmount        Float     @default(0)
+  paidAmount         Float     @default(0)
 
-  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  booking      Booking              @relation(fields: [bookingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  bookingShift LibraryShiftAndPrice? @relation(fields: [bookingShiftId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Subscription {

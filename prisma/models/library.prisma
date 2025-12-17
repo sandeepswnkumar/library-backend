@@ -144,6 +144,7 @@ model LibraryShiftAndPrice {
   locations            LibraryLocation    @relation(fields: [libraryLocationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   roomType             LibraryRoomType    @relation(fields: [libraryRoomTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   bookingUnit          LibraryBookingUnit @relation(fields: [libraryBookingUnitId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  bookingDetails       BookingDetails[]
 
   @@unique([libraryId, libraryLocationId, libraryRoomTypeId, libraryBookingUnitId, period])
 }

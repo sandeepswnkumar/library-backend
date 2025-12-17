@@ -6,6 +6,7 @@ import libaryLocationRoute from "./Routes/libraryLocation.route.js"
 import libaryFacilityRoute from "./Routes/libraryFacility.route.js"
 import libraryShiftAndPrice from "./Routes/libraryShiftAndPrice.route.js"
 import miscellaneousRoute from "./Routes/miscellaneous.route.js"
+import bookingRoute from "./Routes/booking.route.js"
 import { auth } from "./Middleware/auth.middleware.js";
 import api_response from "./Utils/apiResponse.js";
 import ApiResponseCode from "./Enums/apiResponseCode.js";
@@ -18,6 +19,7 @@ router.use('/library', auth, libaryRoute)
 router.use('/library-location', auth, libaryLocationRoute)
 router.use('/library-shift-price', auth, libraryShiftAndPrice)
 router.use('/library-facility', auth, libaryFacilityRoute)
+router.use('/booking', auth, bookingRoute)
 router.use('/misc', auth, miscellaneousRoute)
 
 router.use((req, res, next) => {
